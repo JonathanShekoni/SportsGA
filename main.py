@@ -21,6 +21,13 @@ except Exception as err:
 curr = conn.cursor()
 
 curr.execute("SELECT * FROM NBA 2025-2026 Season.my_table") #Replace my_table with desired player
+
+
+PPG = None #Points per game
+APG = None #Assists per game
+RPG = None #Rebounds per game
+
+
 #Compares players stats
 def comparePlayers(player1,player2):
     
