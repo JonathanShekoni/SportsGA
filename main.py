@@ -27,7 +27,7 @@ career = playercareerstats.PlayerCareerStats(player_id='1628983')
 shaiStats1 = career.season_totals_regular_season.get_data_frame()
 
 #Create csv file from dataframe
-shaiStats1.to_csv('shaiStats.csv')
+shaiStats1.to_csv('shaiStats.csv') #Planning to remove
 
 #Configure filepath and table name for later access
 csv_file_path = 'shaiStats.csv'
