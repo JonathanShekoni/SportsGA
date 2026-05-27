@@ -52,7 +52,7 @@ def get_player_stats(player_id):
         'https://api.balldontlie.io/v1/season_averages',
         params={
             'player_id': player_id,
-            'season': 2024
+            'season': 2025
         }
     )
 
@@ -90,7 +90,7 @@ for player in players:
             con=engine,
             if_exists='replace',
             index=False,
-            schema='public'
+            schema='NBA 2025-2026 Season'
         )
         print(f"Inserted {player['first_name']} {player['last_name']}")
         time.sleep(1)
