@@ -90,7 +90,7 @@ for player in players:
             con=engine,
             if_exists='replace',
             index=False,
-            schema='NBA 2025-2026 Season'
+            schema='NBA_2025-2026_Season'
         )
         print(f"Inserted {player['first_name']} {player['last_name']}")
         time.sleep(1)
