@@ -23,49 +23,104 @@ except Exception as err:
 #Cursor
 curr = conn.cursor()
 
-curr.execute('SELECT * FROM "NBA_2025-2026_Season"."Amen_Thompson"') #Replace my_table with desired player
-row = curr.fetchall()
-print(row[0][0])
+#Player class
+class Player:
 
-#Selects all data from player table on Postgres
-def load_player_data(player):
-    curr.execute(f'SELECT * FROM "NBA_2025-2026_Season"."{player}"')
+    def __init__(self,name,points,rebounds,assists):
+        self.name = name
+        self.points = points
+        self.rebounds = rebounds
+        self.assists = assists
+
+
+    def get_stats(self): 
+        curr.execute(f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"')
+        row = curr.fetchall()
+
+        self.points = row[0][0]
+        self.rebounds = row[0][11]
+        self.assists = row[0][1]
+
 
 
 #Compares players stats
 def comparePlayers(player1,player2):
+    #Tracks how many stats each player won
     score1 = 0
     score2 = 0
-
-    load_player_data(player1)
-    row = curr.fetchall()
-    points1 = row[0][0]
-    rebounds1 = row[0][11]
-    assists1 = row[0][1]
-
-    load_player_data(player2)
-    row = curr.fetchall()
-    points2 = row[0][0]
-    rebounds2 = row[0][11]
-    assists2 = row[0][1]
     
-    if (points1 > points2) or (rebounds1 > rebounds2) or (assists1 > assists2):
+    
+    #Initializes both players stats
+    player1.get_stats()
+    
+    player2.get_stats()
+
+
+    #Stores who won which individual stat
+    comparisons = {
+        "points": None,
+        "rebounds": None,
+        "assists": None,
+        "winner": None,
+    }
+    
+
+    if (player1.points > player2.points):
         score1 += 1
-    elif (points1 == points2) or (rebounds1 == rebounds2) or (assists1 == assists2):
+        comparisons["points"] = player1.name
+    elif (player1.points == player2.points):
         score1 += 1
         score2 += 1
+        comparisons["points"] = "tie"
     else:
         score2 += 1
+        comparisons["points"] = player2.name
+    
 
-    if score1 > score2 :
-        print(f"{player1} is overall better than {player2}")
+    if (player1.rebounds > player2.rebounds):
+        score1 += 1
+        comparisons["rebounds"] = player1.name
+    elif (player1.rebounds == player2.rebounds):
+        score1 += 1
+        score2 += 1
+        comparisons["rebounds"] = "tie"
+    else:
+        score2 += 1
+        comparisons["rebounds"] = player2.name
+
+
+    if (player1.assists > player2.assists):
+        score1 += 1
+        comparisons["assists"] = player1.name
+    elif (player1.assists == player2.assists):
+        score1 += 1
+        score2 += 1
+        comparisons["assists"] = "tie"
+    else:
+        score2 += 1
+        comparisons["assists"] = player2.name
+
+
+    if score1 > score2 :    
+        print(f"{player1.name} is overall better than {player2.name}")
+        comparisons["winner"] = player1.name
     elif score1 < score2:
-        print(f"{player2} is overall better than {player1}")
+        print(f"{player2.name} is overall better than {player1.name}")
+        comparisons["winner"] = player2.name
     else:
-        print(f"{player1} and {player2} are statistically equal")
+        print(f"{player1.name} and {player2.name} are statistically equal")
+        comparisons["winner"] = "tie"
+
+    print(f"{player1.name}\nPPG:{player1.points}\nAPG:{player1.assists}\nRPG:{player1.rebounds}\n----------")
+    print(f"{player2.name}\nPPG:{player2.points}\nAPG:{player2.assists}\nRPG:{player2.rebounds}\n----------")
 
 
-comparePlayers("Alex_Caruso","Ajay_Mitchell")
+#Test
+playertest1 = Player("Alex_Caruso",0,0,0)
+
+playertest2 = Player("Ajay_Mitchell",0,0,0)
+
+comparePlayers(playertest1,playertest2)
 
 conn.close()
 #Flask testing
