@@ -1,27 +1,44 @@
-from flask import Flask, redirect, url_for
-from nba_api.stats.endpoints import playercareerstats
-import psycopg2 as pg
-import pandas
-import numpy
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+import pandas as pd
+
+db = SQLAlchemy()  # Created without app first
+
+
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:Lekan228899@localhost:5432/PlayerStats'
+    db.init_app(app)  # Then connected to app here
+    @app.route('/')
+    def home():
+        return "<h1>Flask REST API</h1>"
+    
+
+
+    return app
 
 #Connect to the DB
-try:
-    conn = pg.connect(
-        host = 'localhost',
-        database = 'PlayerStats',
-        port =  5432,
-        user = 'postgres',
-        password = 'Lekan228899',
-    )
+engine = create_engine(
+    'postgresql+psycopg2://postgres:Lekan228899@localhost:5432/PlayerStats',
+    pool_size=20,
+    max_overflow=10,
+    pool_timeout=60
+)
 
 
-except Exception as err:
-    print("Something went wrong")
-    print(err)
 
-
-#Cursor
-curr = conn.cursor()
+def query_db(query):
+    
+    try:
+        #Use pd.read_sql to execute the query and load results into a DataFrame
+        df = pd.read_sql(query,engine)
+        print("Query completed Succesfully!")
+        return df
+    
+    except Exception as e:
+        print(f"An error has occured: {e}")
+        return None
 
 #Player class
 class Player:
@@ -34,12 +51,12 @@ class Player:
 
 
     def get_stats(self): 
-        curr.execute(f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"')
-        row = curr.fetchall()
-
-        self.points = row[0][0]
-        self.rebounds = row[0][11]
-        self.assists = row[0][1]
+        query = f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"'
+        df = query_db(query)
+        
+        self.points = df['pts'][0]
+        self.rebounds = df['reb'][0]
+        self.assists = df['ast'][0]
 
 
 
@@ -102,36 +119,17 @@ def comparePlayers(player1,player2):
 
 
     if score1 > score2 :    
-        print(f"{player1.name} is overall better than {player2.name}")
         comparisons["winner"] = player1.name
     elif score1 < score2:
-        print(f"{player2.name} is overall better than {player1.name}")
         comparisons["winner"] = player2.name
     else:
-        print(f"{player1.name} and {player2.name} are statistically equal")
         comparisons["winner"] = "tie"
 
-    print(f"{player1.name}\nPPG:{player1.points}\nAPG:{player1.assists}\nRPG:{player1.rebounds}\n----------")
-    print(f"{player2.name}\nPPG:{player2.points}\nAPG:{player2.assists}\nRPG:{player2.rebounds}\n----------")
+    return comparisons
 
-
-#Test
-playertest1 = Player("Alex_Caruso",0,0,0)
-
-playertest2 = Player("Ajay_Mitchell",0,0,0)
-
-comparePlayers(playertest1,playertest2)
-
-conn.close()
 #Flask testing
 
-"""app = Flask(__name__) # Flask constructor
-#Decorator used to tell the application which URL is associated with the function
-@app.route('/')
-
-def home():
-    return f"Sports Analytics API Running: {career.get_json}"
-
-
 if __name__ == "__main__":
-    app.run(debug=True) """
+    app = create_app()
+    app.run(debug=True)
+
