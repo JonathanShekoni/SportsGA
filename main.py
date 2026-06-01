@@ -1,4 +1,6 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import pandas as pd
@@ -8,11 +10,32 @@ db = SQLAlchemy()  # Created without app first
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+
+    #Enables CORS for the whole app
+    CORS(app)
+
     app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:Lekan228899@localhost:5432/PlayerStats'
     db.init_app(app)  # Then connected to app here
+
+
     @app.route('/')
+    @app.route('/home')
     def home():
         return "<h1>Flask REST API</h1>"
+    
+    @app.route('/compare')
+    def compare():
+        try:
+            player1_name = request.args.get("player1")
+            player2_name = request.args.get("player2")
+
+            #Create Player objects
+            player1 = Player(player1_name,0,0,0)
+            player2 = Player(player2_name,0,0,0)
+
+            return jsonify(comparePlayers(player1,player2))
+        except Exception as e:
+            return jsonify({"error": "Player not found. Please try again."}, 404)
     
 
 
