@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 import pandas as pd
@@ -24,10 +23,13 @@ def create_app():
         return "<h1>Flask REST API</h1>"
     
     @app.route('/compare')
+    
     def compare():
+        print("COMPARE ROUTE HIT")
         try:
-            player1_name = request.args.get("player1")
-            player2_name = request.args.get("player2")
+            player1_name = request.args.get("player1").replace(" ", "_")
+            player2_name = request.args.get("player2").replace(" ", "_")
+            print(f"Looking up: {player1_name} and {player2_name}")
 
             #Create Player objects
             player1 = Player(player1_name,0,0,0)
@@ -35,7 +37,7 @@ def create_app():
 
             return jsonify(comparePlayers(player1,player2))
         except Exception as e:
-            return jsonify({"error": "Player not found. Please try again."}, 404)
+            return jsonify({"error": "Player not found. Please try again."}), 404
     
 
 
@@ -60,8 +62,8 @@ def query_db(query):
         return df
     
     except Exception as e:
-        print(f"An error has occured: {e}")
-        return None
+        print(f"REAL ERROR: {e}")
+        return jsonify({"error": str(e)}), 404
 
 #Player class
 class Player:
@@ -76,10 +78,13 @@ class Player:
     def get_stats(self): 
         query = f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"'
         df = query_db(query)
+        print(df.columns.tolist())  # prints all column names
+        print(df.head())            # prints first row
         
-        self.points = df['pts'][0]
-        self.rebounds = df['reb'][0]
-        self.assists = df['ast'][0]
+        self.points = float(df['pts'][0])
+        self.rebounds = float(df['reb'][0])
+        self.assists = float(df['ast'][0])
+        self.id = int(df['player_id'][0])
 
 
 
@@ -96,12 +101,23 @@ def comparePlayers(player1,player2):
     player2.get_stats()
 
 
-    #Stores who won which individual stat
+    #Stores who won which individual stat and their details
     comparisons = {
         "points": None,
         "rebounds": None,
         "assists": None,
         "winner": None,
+        "player1_id":player1.id,
+        "player2_id":player2.id,
+        "player1_name":player1.name,
+        "player2_name":player2.name,
+        "player1_points":player1.points,
+        "player2_points":player2.points,
+        "player1_rebounds":player1.rebounds,
+        "player2_rebounds":player2.rebounds,
+        "player1_assists":player1.assists,
+        "player2_assists":player2.assists,
+
     }
     
 
