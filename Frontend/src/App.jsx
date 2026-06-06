@@ -1,5 +1,5 @@
 import PlayerComparison from "./Components/PlayerComparison"
-
+import PlayerCard from "./Components/PlayerCard"
 
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
     <div>
       <h1>SportsGA</h1>
       <PlayerComparison />
+      
     </div>
   )
 }
