@@ -11,6 +11,12 @@ const PlayerComparison = () => {
     const handleCompare = async () => {
         const res = await fetch(`http://localhost:5000/compare?player1=${player1}&player2=${player2}`)
         const data = await res.json()
+
+        if(data.error) {
+            alert(data.error)
+            return
+        }
+
         setResult(data)
         console.log(data)
 
@@ -19,8 +25,7 @@ const PlayerComparison = () => {
 
     return (
     <div>
-            <h2>PlayerComparison</h2>
-            <div className='flex gap-4 justify-center'>
+            <div className='flex gap-4 justify-center my-5'>
                 <div>
                     <input className='border-2'
                         type = "text"
@@ -45,7 +50,7 @@ const PlayerComparison = () => {
             </div>
 
             
-            <button className = 'border-2 hover:bg-blue-700 font-bold w-25'onClick={handleCompare}>Compare</button>
+            <button  className = ' m-2 border-2 hover:bg-blue-700 font-bold w-25'onClick={handleCompare}>Compare</button>
             
             {result && (
                 
