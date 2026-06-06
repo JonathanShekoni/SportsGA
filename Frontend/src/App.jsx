@@ -1,13 +1,13 @@
 import PlayerComparison from "./Components/PlayerComparison"
 import PlayerCard from "./Components/PlayerCard"
+import MenuBar from "./Components/MenuBar"
 
 
 function App() {
   return (
     <div>
-      <h1>SportsGA</h1>
+      <MenuBar />
       <PlayerComparison />
-      
     </div>
   )
 }
