@@ -182,7 +182,7 @@ def comparePlayers(player1,player2):
     elif score1 < score2:
         comparisons["winner"] = player2.name
     else:
-        comparisons["winner"] = "tie"
+        comparisons["winner"] = "Tie"
 
     return comparisons
 
