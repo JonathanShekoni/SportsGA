@@ -12,7 +12,13 @@ const MenuBar = () => {
 
         <div className='text-lg center font-bold'>Player Comparison</div>
 
-        <div className='w-24'>Search</div>
+        <div>
+          <input
+            type = 'text'
+            className = 'w-24 px-5'
+            placeholder='Search'
+          />
+        </div>
     </nav>
   )
 }

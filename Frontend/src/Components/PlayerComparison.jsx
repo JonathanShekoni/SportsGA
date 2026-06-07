@@ -8,6 +8,8 @@ const PlayerComparison = () => {
     const [player2, setPlayer2] = useState('')
     const [result, setResult] = useState(null)
     const [playerList, setPlayerList] = useState([])
+    const [suggestions, setSuggestions] = useState([])
+    const [suggestions2, setSuggestions2] = useState([])
     
     useEffect(() => {
         const fetchplayers = async () => {
@@ -35,6 +37,39 @@ const PlayerComparison = () => {
 
     }
 
+    const handleSuggestions = (typed) => {
+        const updatedList = []
+        const length_of_name = typed.length
+        
+        if (typed === ''){
+            setSuggestions([])
+            return
+        }
+        for (let i = 0; i < playerList.length; i++) {
+            if (playerList[i].toLowerCase().includes(typed.toLowerCase())) {
+                updatedList.push(playerList[i])
+            }
+
+        }
+        setSuggestions(updatedList)
+    }
+
+    const handleSuggestions2 = (typed) => {
+        const updatedList = []
+        const length_of_name = typed.length
+        
+        if (typed === ''){
+            setSuggestions2([])
+            return
+        }
+        for (let i = 0; i < playerList.length; i++) {
+            if (playerList[i].toLowerCase().includes(typed.toLowerCase())) {
+                updatedList.push(playerList[i])
+            }
+
+        }
+        setSuggestions2(updatedList)
+    }
 
     return (
     <div>
@@ -45,8 +80,26 @@ const PlayerComparison = () => {
                         placeholder= "Player 1"
                         value = {player1}
                         className = "text-center border-2 border-blue-400 rounded px-4 py-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                        onChange= {(e) => setPlayer1(e.target.value)}
+                        onChange= {(e) => {
+                            setPlayer1(e.target.value)
+                            handleSuggestions(e.target.value)
+                        }}
                     />
+                    {suggestions.length > 0 && (
+                        <div className='max-h-28 overflow-y-auto'>
+                            {suggestions.map((player) => (
+                            <p 
+                                onClick={() =>{
+                                    setPlayer1(player)
+                                    setSuggestions([])
+                                }} 
+                                key ={player}
+                                className='block w-full text-left hover:bg-blue-600 px-4 py-2 cursor-pointer'
+                                >{player}
+                            </p>
+                        ))}
+                        </div>
+                    )}
 
                 </div>
                 <div>
@@ -55,8 +108,27 @@ const PlayerComparison = () => {
                         placeholder="Player 2" 
                         value={player2}
                         className = "text-center border-2 border-blue-400 rounded px-4 py-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                        onChange={(e) => setPlayer2(e.target.value)}
+                        onChange= {(e) => {
+                            setPlayer2(e.target.value)
+                            handleSuggestions2(e.target.value)
+                        }}
                     />
+
+                    {suggestions2.length > 0 && (
+                        <div className='max-h-28 overflow-y-auto'>
+                            {suggestions2.map((player) => (
+                            <p 
+                                onClick={() =>{
+                                    setPlayer2(player)
+                                    setSuggestions2([])
+                                }} 
+                                key ={player}
+                                className='block w-full text-left hover:bg-blue-600 px-4 py-2 cursor-pointer'
+                                >{player}
+                            </p>
+                        ))}
+                        </div>
+                    )}
                 </div>
 
 
@@ -84,11 +156,11 @@ const PlayerComparison = () => {
 
                     </div>
                     <div className='mt-39 font-bold'>
-                        <p className='h-9.5 flex items-center justify-center'>Points/G</p>
-                        <p className='h-9.5 flex items-center justify-center'>Rebounds/G</p>
-                        <p className='h-9.5 flex items-center justify-center'>Assists/G</p>
-                        <p className='h-9.5 flex items-center justify-center'>Overall:</p>
-                        <p className='h-9.5 flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>   
+                        <p className='h-8.5 flex items-center justify-center'>Points/G</p>
+                        <p className='h-8.5 flex items-center justify-center'>Rebounds/G</p>
+                        <p className='h-8.5 flex items-center justify-center'>Assists/G</p>
+                        <p className='flex items-center justify-center'>Overall:</p>
+                        <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>   
                     </div>
                     <div>
                         <PlayerCard
