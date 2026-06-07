@@ -10,7 +10,7 @@ db = SQLAlchemy()  # Created without app first
 load_dotenv()
 
 engine = create_engine(
-    f'{os.getenv('DATABASE_URL')}',
+    f"{os.getenv('DATABASE_URL')}",
     pool_size=20,
     max_overflow=10,
     pool_timeout=60
@@ -18,16 +18,24 @@ engine = create_engine(
 
 
 
-inspector = inspect(engine)
 
-all_table_names = inspector.get_table_names(schema='NBA_2025-2026_Season')
 
-formatted_all_table_names = [name.replace('_', ' ') for name in all_table_names]
+
+
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
-    #Enables CORS for the whole app
+    inspector = inspect(engine)
+
+    all_table_names = inspector.get_table_names(schema='NBA_2025-2026_Season')
+    
+    global formatted_all_table_names
+    formatted_all_table_names = [
+        name.replace('_', ' ')
+        for name in all_table_names
+    ]
     CORS(app)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = f'{os.getenv('DATABASE_URL')}'
@@ -190,5 +198,7 @@ def comparePlayers(player1,player2):
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host='0.0.0.0', debug=True)
+
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0',port=port, debug=True)
 
