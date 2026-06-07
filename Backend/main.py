@@ -1,11 +1,28 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,inspect,text
 import pandas as pd
+from dotenv import load_dotenv
+import os
 
 db = SQLAlchemy()  # Created without app first
+load_dotenv()
 
+engine = create_engine(
+    f'{os.getenv('DATABASE_URL')}',
+    pool_size=20,
+    max_overflow=10,
+    pool_timeout=60
+)
+
+
+
+inspector = inspect(engine)
+
+all_table_names = inspector.get_table_names(schema='NBA_2025-2026_Season')
+
+formatted_all_table_names = [name.replace('_', ' ') for name in all_table_names]
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -13,7 +30,7 @@ def create_app():
     #Enables CORS for the whole app
     CORS(app)
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:Lekan228899@localhost:5432/PlayerStats'
+    app.config["SQLALCHEMY_DATABASE_URI"] = f'{os.getenv('DATABASE_URL')}'
     db.init_app(app)  # Then connected to app here
 
 
@@ -38,18 +55,21 @@ def create_app():
             return jsonify(comparePlayers(player1,player2))
         except Exception as e:
             return jsonify({"error": "Player not found. Please try again."}), 404
+        
+    @app.route('/players')
+
+    def get_players():
+        print("GET_PLAYERS ROUTE HIT")
+        try:
+            return jsonify(formatted_all_table_names)
+        except Exception as e:
+            return jsonify({"error": "Player names could not be fetched. Please try again."}), 404
     
 
 
     return app
 
 #Connect to the DB
-engine = create_engine(
-    'postgresql+psycopg2://postgres:Lekan228899@localhost:5432/PlayerStats',
-    pool_size=20,
-    max_overflow=10,
-    pool_timeout=60
-)
 
 
 
