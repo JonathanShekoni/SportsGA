@@ -5,11 +5,12 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 API_KEY = os.getenv('BALLDONTLIE_API_KEY')
 
 engine = create_engine(
-    'postgresql+psycopg2://postgres:Lekan228899@localhost:5432/PlayerStats',
+    f'{os.getenv('DATABASE_URL')}',
     pool_size=20,
     max_overflow=10,
     pool_timeout=60
