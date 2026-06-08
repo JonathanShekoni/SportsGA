@@ -119,3 +119,9 @@ code {
     font-family: 'Bebas Neue', sans-serif;
   }
 }
+
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
