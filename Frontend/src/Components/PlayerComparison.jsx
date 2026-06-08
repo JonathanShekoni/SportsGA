@@ -149,9 +149,11 @@ const PlayerComparison = () => {
                         points={result.player1_points.toFixed(1)}
                         rebounds={result.player1_rebounds.toFixed(1)}
                         assists={result.player1_assists.toFixed(1)}
+                        fg_pct={result.player1_fg_pct.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
+                        winnerFg_pct = {result.fg_pct}
                         />
 
                     </div>
@@ -159,8 +161,11 @@ const PlayerComparison = () => {
                         <p className='h-8.5 flex items-center justify-center'>Points/G</p>
                         <p className='h-8.5 flex items-center justify-center'>Rebounds/G</p>
                         <p className='h-8.5 flex items-center justify-center'>Assists/G</p>
+                        <p className='h-8.5 flex items-center justify-center'>Fg%</p>
+                        {/*
                         <p className='flex items-center justify-center'>Overall:</p>
-                        <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>   
+                        <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>  
+                        */} 
                     </div>
                     <div>
                         <PlayerCard
