@@ -162,7 +162,7 @@ const PlayerComparison = () => {
                         <p className='h-8.5 flex items-center justify-center'>Rebounds/G</p>
                         <p className='h-8.5 flex items-center justify-center'>Assists/G</p>
                         <p className='h-8.5 flex items-center justify-center'>Fg%</p>
-                        <p className='flex items-center justify-center'>Overall:</p>
+                        <p className='my-2 flex items-center justify-center'>Overall:</p>
                         <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>  
 
                     </div>
