@@ -146,9 +146,9 @@ const PlayerComparison = () => {
                         <PlayerCard
                         name={result.player1_name}
                         playerId={result.player1_id}
-                        points={result.player1_points}
-                        rebounds={result.player1_rebounds}
-                        assists={result.player1_assists}
+                        points={result.player1_points.toFixed(1)}
+                        rebounds={result.player1_rebounds.toFixed(1)}
+                        assists={result.player1_assists.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
@@ -166,9 +166,9 @@ const PlayerComparison = () => {
                         <PlayerCard
                         name={result.player2_name}
                         playerId={result.player2_id}
-                        points={result.player2_points}
-                        rebounds={result.player2_rebounds}
-                        assists={result.player2_assists}
+                        points={result.player2_points.toFixed(1)}
+                        rebounds={result.player2_rebounds.toFixed(1)}
+                        assists={result.player2_assists.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
