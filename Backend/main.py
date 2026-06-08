@@ -113,6 +113,13 @@ class Player:
         self.rebounds = float(df['reb'][0])
         self.assists = float(df['ast'][0])
         self.id = int(df['player_id'][0])
+        self.fg_pct = float(df['fg_pct'][0])
+        self.fg3_pct = float(df['fg3_pct'][0])
+        self.ft_pct = float(df['ft_pct'][0])
+        self.to = float(df['turnover'][0])
+        self.stl = float(df['stl'][0])
+        self.blk = float(df['blk'][0])
+
 
 
 
@@ -135,6 +142,12 @@ def comparePlayers(player1,player2):
         "rebounds": None,
         "assists": None,
         "winner": None,
+        "fg_pct": None,
+        "fg3_pct": None,
+        "ft_pct": None,
+        "to": None,
+        "stl": None,
+        "blk": None,
         "player1_id":player1.id,
         "player2_id":player2.id,
         "player1_name":player1.name,
@@ -145,7 +158,18 @@ def comparePlayers(player1,player2):
         "player2_rebounds":player2.rebounds,
         "player1_assists":player1.assists,
         "player2_assists":player2.assists,
-
+        "player1_fg_pct":player1.fg_pct,
+        "player2_fg_pct":player2.fg_pct,
+        "player1_fg3_pct":player1.fg3_pct,
+        "player2_fg3_pct":player2.fg3_pct,
+        "player1_ft_pct":player1.ft_pct,
+        "player2_ft_pct":player2.ft_pct,
+        "player1_to":player1.to,
+        "player2_to":player2.to,
+        "player1_stl":player1.stl,
+        "player2_stl":player2.stl,
+        "player1_blk":player1.blk,
+        "player2_blk":player2.blk,
     }
     
 
@@ -183,6 +207,72 @@ def comparePlayers(player1,player2):
     else:
         score2 += 1
         comparisons["assists"] = player2.name
+
+    if (player1.fg_pct > player2.fg_pct):
+        score1 += 1
+        comparisons["fg_pct"] = player1.name
+    elif (player1.fg_pct == player2.fg_pct):
+        score1 += 1
+        score2 += 1
+        comparisons["fg_pct"] = "tie"
+    else:
+        score2 += 1
+        comparisons["fg_pct"] = player2.name
+
+    if (player1.fg3_pct > player2.fg3_pct):
+        score1 += 1
+        comparisons["fg3_pct"] = player1.name
+    elif (player1.fg3_pct == player2.fg3_pct):
+        score1 += 1
+        score2 += 1
+        comparisons["fg3_pct"] = "tie"
+    else:
+        score2 += 1
+        comparisons["fg3_pct"] = player2.name
+
+    if (player1.ft_pct > player2.ft_pct):
+        score1 += 1
+        comparisons["ft_pct"] = player1.name
+    elif (player1.ft_pct == player2.ft_pct):
+        score1 += 1
+        score2 += 1
+        comparisons["ft_pct"] = "tie"
+    else:
+        score2 += 1
+        comparisons["ft_pct"] = player2.name
+
+    if (player1.to > player2.to):
+        score2 += 1
+        comparisons["to"] = player2.name
+    elif (player1.to == player2.to):
+        score1 += 1
+        score2 += 1
+        comparisons["to"] = "tie"
+    else:
+        score1 += 1
+        comparisons["to"] = player1.name
+
+    if (player1.stl > player2.stl):
+        score1 += 1
+        comparisons["stl"] = player1.stl
+    elif (player1.stl == player2.stl):
+        score1 += 1
+        score2 += 1
+        comparisons["stl"] = "tie"
+    else:
+        score2 += 1
+        comparisons["stl"] = player2.name
+
+    if (player1.blk > player2.blk):
+        score1 += 1
+        comparisons["blk"] = player1.name
+    elif (player1.blk == player2.blk):
+        score1 += 1
+        score2 += 1
+        comparisons["blk"] = "tie"
+    else:
+        score2 += 1
+        comparisons["blk"] = player2.name
 
 
     if score1 > score2 :    

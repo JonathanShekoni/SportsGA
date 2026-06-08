@@ -169,9 +169,11 @@ const PlayerComparison = () => {
                         points={result.player2_points.toFixed(1)}
                         rebounds={result.player2_rebounds.toFixed(1)}
                         assists={result.player2_assists.toFixed(1)}
+                        fg_pct={result.player2_fg_pct.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
+                        winnerFg_pct = {result.fg_pct}
                         />
 
                     </div>     
