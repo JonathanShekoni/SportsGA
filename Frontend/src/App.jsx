@@ -5,7 +5,7 @@ import MenuBar from "./Components/MenuBar"
 
 function App() {
   return (
-    <div>
+    <div className="w-full">
       <MenuBar />
       <PlayerComparison />
     </div>
