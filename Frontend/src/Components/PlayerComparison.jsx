@@ -13,7 +13,7 @@ const PlayerComparison = () => {
     
     useEffect(() => {
         const fetchplayers = async () => {
-            const res = await fetch(`http://localhost:5000/players`)
+            const res = await fetch(`https://sportsga.onrender.com/players`)
             const data = await res.json()
             setPlayerList(data)
         }
@@ -24,7 +24,7 @@ const PlayerComparison = () => {
 
 
     const handleCompare = async () => {
-        const res = await fetch(`http://localhost:5000/compare?player1=${player1}&player2=${player2}`)
+        const res = await fetch(`https://sportsga.onrender.com/compare?player1=${player1}&player2=${player2}`)
         const data = await res.json()
 
         if(data.error) {
