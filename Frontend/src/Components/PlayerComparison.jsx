@@ -150,10 +150,12 @@ const PlayerComparison = () => {
                         rebounds={result.player1_rebounds.toFixed(1)}
                         assists={result.player1_assists.toFixed(1)}
                         fg_pct={result.player1_fg_pct.toFixed(1)}
+                        fg3_pct={result.player1_fg3_pct.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
                         winnerFg_pct = {result.fg_pct}
+                        winnerFg3_pct = {result.fg3_pct}
                         />
 
                     </div>
@@ -174,10 +176,12 @@ const PlayerComparison = () => {
                         rebounds={result.player2_rebounds.toFixed(1)}
                         assists={result.player2_assists.toFixed(1)}
                         fg_pct={result.player2_fg_pct.toFixed(1)}
+                        fg3_pct={result.player2_fg3_pct.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
                         winnerFg_pct = {result.fg_pct}
+                        winnerFg3_pct = {result.fg3_pct}
                         />
 
                     </div>     
