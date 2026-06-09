@@ -1,2 +1,4 @@
 Let Comparisons be its own page.
-Let there be a Player page where you can see a players full stats alongside how they compare with league average.
+Let there be a Player page where you can see a players full stats alongside how they compare with league average. 
+Adding a radar chart or a chart of some kind
+Add team comparison .
