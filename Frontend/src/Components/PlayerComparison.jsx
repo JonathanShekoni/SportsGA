@@ -149,13 +149,22 @@ const PlayerComparison = () => {
                         points={result.player1_points.toFixed(1)}
                         rebounds={result.player1_rebounds.toFixed(1)}
                         assists={result.player1_assists.toFixed(1)}
-                        fg_pct={result.player1_fg_pct.toFixed(1)}
-                        fg3_pct={result.player1_fg3_pct.toFixed(1)}
+                        fg_pct={(result.player1_fg_pct * 100).toFixed(1)}
+                        fg3_pct={(result.player1_fg3_pct * 100).toFixed(1)}
+                        ft_pct={(result.player1_ft_pct * 100).toFixed(1)}
+                        to={result.player1_to.toFixed(1)}
+                        stl={result.player1_stl.toFixed(1)}
+                        blk={result.player1_blk.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
                         winnerFg_pct = {result.fg_pct}
                         winnerFg3_pct = {result.fg3_pct}
+                        winnerft_pct = {result.ft_pct}
+                        winnerto = {result.to}
+                        winnerstl = {result.stl}
+                        winnerblk = {result.blk}
+                        winner = {result.winner}
                         />
 
                     </div>
@@ -163,10 +172,16 @@ const PlayerComparison = () => {
                         <p className='h-8.5 flex items-center justify-center'>Points/G</p>
                         <p className='h-8.5 flex items-center justify-center'>Rebounds/G</p>
                         <p className='h-8.5 flex items-center justify-center'>Assists/G</p>
-                        <p className='h-8.5 flex items-center justify-center'>Fg%</p>
-                        <p className='my-2 flex items-center justify-center'>Overall:</p>
-                        <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>  
+                        <p className='h-8.5 flex items-center justify-center'>FG%</p>
+                        <p className='h-8.5 flex items-center justify-center'>3FG%</p>
+                        <p className='h-8.5 flex items-center justify-center'>FT%</p>
+                        <p className='h-8.5 flex items-center justify-center'>TO</p>
+                        <p className='h-8.5 flex items-center justify-center'>STL</p>
+                        <p className='h-8.5 flex items-center justify-center'>BLK</p>
 
+                        {/*
+                        <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>  
+*/}
                     </div>
                     <div>
                         <PlayerCard
@@ -175,13 +190,22 @@ const PlayerComparison = () => {
                         points={result.player2_points.toFixed(1)}
                         rebounds={result.player2_rebounds.toFixed(1)}
                         assists={result.player2_assists.toFixed(1)}
-                        fg_pct={result.player2_fg_pct.toFixed(1)}
-                        fg3_pct={result.player2_fg3_pct.toFixed(1)}
+                        fg_pct={(result.player2_fg_pct * 100).toFixed(1)}
+                        fg3_pct={(result.player2_fg3_pct * 100).toFixed(1)}
+                        ft_pct={(result.player2_ft_pct * 100).toFixed(1)}
+                        to={result.player2_to.toFixed(1)}
+                        stl={result.player2_stl.toFixed(1)}
+                        blk={result.player2_blk.toFixed(1)}
                         winnerPoints ={result.points}
                         winnerAssists = {result.assists}
                         winnerRebounds = {result.rebounds}
                         winnerFg_pct = {result.fg_pct}
                         winnerFg3_pct = {result.fg3_pct}
+                        winnerft_pct = {result.ft_pct}
+                        winnerto = {result.to}
+                        winnerstl = {result.stl}
+                        winnerblk = {result.blk}
+                        winner = {result.winner}
                         />
 
                     </div>     
