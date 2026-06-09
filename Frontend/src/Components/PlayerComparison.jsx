@@ -74,19 +74,19 @@ const PlayerComparison = () => {
     return (
     <div>
             <div className='flex gap-4 justify-center my-5'>
-                <div>
+                <div className='relative'>
                     <input 
                         type = "text"
                         placeholder= "Player 1"
                         value = {player1}
-                        className = "text-center border-2 border-blue-400 rounded px-4 py-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                        className = "text-center border-2 border-blue-400 rounded-2xl px-4 py-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
                         onChange= {(e) => {
                             setPlayer1(e.target.value)
                             handleSuggestions(e.target.value)
                         }}
                     />
                     {suggestions.length > 0 && (
-                        <div className='max-h-28 overflow-y-auto'>
+                        <div className='absolute w-full max-h-28 overflow-y-auto z-10'>
                             {suggestions.map((player) => (
                             <p 
                                 onClick={() =>{
@@ -102,12 +102,12 @@ const PlayerComparison = () => {
                     )}
 
                 </div>
-                <div>
+                <div className='relative'>
                     <input
                         type="text" 
                         placeholder="Player 2" 
                         value={player2}
-                        className = "text-center border-2 border-blue-400 rounded px-4 py-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                        className = "text-center border-2 border-blue-400 rounded-2xl px-4 py-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
                         onChange= {(e) => {
                             setPlayer2(e.target.value)
                             handleSuggestions2(e.target.value)
@@ -115,7 +115,7 @@ const PlayerComparison = () => {
                     />
 
                     {suggestions2.length > 0 && (
-                        <div className='max-h-28 overflow-y-auto'>
+                        <div className='absolute w-full max-h-28 overflow-y-auto z-10'>
                             {suggestions2.map((player) => (
                             <p 
                                 onClick={() =>{
@@ -131,17 +131,18 @@ const PlayerComparison = () => {
                     )}
                 </div>
 
+                    <button  className = ' m-2 border-2 rounded-2xl hover:bg-blue-700 font-bold w-25 transition duration-300 hover:scale-110 cursor-pointer'onClick={handleCompare}>Compare</button>
 
             </div>
 
             
-            <button  className = ' m-2 border-2 hover:bg-blue-700 font-bold w-25 transition duration-300 hover:scale-110 cursor-pointer'onClick={handleCompare}>Compare</button>
+            
             
             {result && (
                 
 
                 
-                <div className='flex gap-6 justify-center'>
+                <div className='flex gap-6 justify-around my-15'>
                     <div>
                         <PlayerCard
                         name={result.player1_name}
@@ -168,16 +169,16 @@ const PlayerComparison = () => {
                         />
 
                     </div>
-                    <div className='mt-39 font-bold'>
-                        <p className='h-8.5 flex items-center justify-center'>Points/G</p>
-                        <p className='h-8.5 flex items-center justify-center'>Rebounds/G</p>
-                        <p className='h-8.5 flex items-center justify-center'>Assists/G</p>
-                        <p className='h-8.5 flex items-center justify-center'>FG%</p>
-                        <p className='h-8.5 flex items-center justify-center'>3FG%</p>
-                        <p className='h-8.5 flex items-center justify-center'>FT%</p>
-                        <p className='h-8.5 flex items-center justify-center'>TO</p>
-                        <p className='h-8.5 flex items-center justify-center'>STL</p>
-                        <p className='h-8.5 flex items-center justify-center'>BLK</p>
+                    <div className='mt-38 font-bold'>
+                        <p className='h-9 flex items-center justify-center'>Points/G</p>
+                        <p className='h-9 flex items-center justify-center'>Rebounds/G</p>
+                        <p className='h-9 flex items-center justify-center'>Assists/G</p>
+                        <p className='h-9 flex items-center justify-center'>FG%</p>
+                        <p className='h-9 flex items-center justify-center'>3FG%</p>
+                        <p className='h-9 flex items-center justify-center'>FT%</p>
+                        <p className='h-9 flex items-center justify-center'>TO</p>
+                        <p className='h-9 flex items-center justify-center'>STL</p>
+                        <p className='h-9 flex items-center justify-center'>BLK</p>
 
                         {/*
                         <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>  
@@ -208,9 +209,11 @@ const PlayerComparison = () => {
                         winner = {result.winner}
                         />
 
-                    </div>     
+                    </div>    
+                    {/*Add season averages at the bottom of the screen. Compare player1,player2 and the season average in one or multiple radar charts */} 
                    
                 </div> 
+            
         )}
     </div>
   )

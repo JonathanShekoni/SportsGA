@@ -9,7 +9,13 @@ export default defineConfig({
   ],
   server: {
     watch: {
-      ignored: ['**/AppData/**']
+      ignored: [
+        '**/AppData/**',
+        '**/.git/**',
+        '**/node_modules/**',
+        '**/*.log',
+      
+      ]
     }
   }
 })

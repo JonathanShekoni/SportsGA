@@ -5,7 +5,7 @@ const PlayerCard = ({name, points,rebounds,assists,fg,fg_pct,fg3_pct,ft_pct,stl,
 
   return (
     <div>
-      <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${playerId}.png`} className="w-32 h-32 object-cover mx-auto" />
+      <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${playerId}.png`} className="w-32 h-32 object-cover mx-5  border-2 border-blue-400" />
       <p className={`text-center font-semibold text-base mt-2 mb-3 ${winner === name ? 'text-green-400' : winner === 'tie' ? 'text-yellow-400' : 'text-red-400'}`}>
         {name.replace(/_/g, ' ')}
       </p>

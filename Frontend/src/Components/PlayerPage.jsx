@@ -1,10 +1,10 @@
 import React from 'react'
 
 
-const PlayerPage = () => {
+const PlayerPage = ({ searchTerm }) => {
   return (
     <div>
-    <p className="text-lg font-bold my-4">PlayerPage</p>
+    <p className="text-lg font-bold my-4">{searchTerm}</p>
     </div>
   )
 }
