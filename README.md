@@ -1,12 +1,17 @@
 # SportsGA 🏀
 
-A full-stack NBA player comparison web application that allows users to compare two players head-to-head based on their 2025-2026 season statistics.
+A full-stack NBA player analytics web application featuring player comparisons, individual player profiles, and season statistics for the 2025-2026 NBA season.
+
+🌐 **Live at [sports-ga.vercel.app](https://sports-ga.vercel.app)**
 
 ## Features
 
-- Compare any two NBA players by points, rebounds, and assists per game
-- Visual stat highlighting — winning stats displayed in green, losing stats in red
+- Compare any two NBA players head-to-head across 9 statistical categories
+- Visual stat highlighting — winning stats in green, losing stats in red
 - Official NBA headshots pulled directly from the NBA CDN
+- Autocomplete player search with live suggestions
+- Individual player profile pages with full season stats
+- Navbar search to navigate directly to any player's profile
 - REST API backend returning structured JSON data
 
 ## Tech Stack
@@ -37,8 +42,16 @@ npm run dev
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/compare?player1=X&player2=Y` | Returns comparison data for two players |
+| GET | `/compare?player1=X&player2=Y` | Returns head-to-head comparison data for two players |
+| GET | `/player?name=X` | Returns season stats for a single player |
+| GET | `/players` | Returns a list of all available players |
+
+## Deployment
+
+- **Frontend** — Vercel
+- **Backend** — Render
+- **Database** — Render PostgreSQL (525+ NBA players, 2025-2026 season)
 
 ## Project Status
 
-🚧 Currently in active development — styling and deployment coming soon.
+✅ Beta live — player profiles and season averages graph in active development.
