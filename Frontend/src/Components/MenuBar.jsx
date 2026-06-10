@@ -6,7 +6,8 @@ import { useLocation,useNavigate} from 'react-router-dom';
 const MenuBar = () => {
 
   const location = useLocation();
-  const isTargetRoute = location.pathname === '/comparison';
+  const isComparisonRoute = location.pathname === '/comparison';
+  const isProfileRoute = location.pathname === '/player';
 
   const [playerList, setPlayerList] = useState([])
   
@@ -42,6 +43,12 @@ const MenuBar = () => {
         setSuggestions(updatedList)
     }
 
+
+  const HomeButton = () => {
+
+    navigate(`/comparison`)
+  }
+    
   const SearchPlayer = (e) => {
     e.preventDefault()
     navigate(`/player?name=${searchTerm}`)
@@ -50,12 +57,16 @@ const MenuBar = () => {
   return (
     <nav className='w-full h-16  shadow-lg flex items-center justify-between px-6'>
         <div className = 'flex items-center gap-2'> 
-            <div className='text-lg  text-blue-400  font-bebas '>SportsGA</div>
+            <button onClick = {HomeButton} className='text-lg  text-blue-400  font-bebas transition cursor-pointer hover:scale-110  '>SportsGA</button>
             <img src={Logo} alt="Logo" className="rounded-lg shadow-md w-8 h-8" />
         </div>
 
-        {isTargetRoute && (
+        {isComparisonRoute && (
           <div className='text-lg center font-bold'>Player Comparison</div>
+        )}
+
+        {isProfileRoute && (
+          <div className='text-lg center font-bold'>Profile</div>
         )}
 
         <div className='relative'>
