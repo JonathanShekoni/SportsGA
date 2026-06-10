@@ -74,6 +74,33 @@ def create_app():
             return jsonify({"error": "Player names could not be fetched. Please try again."}), 404
     
 
+    @app.route('/player')
+    def get_player_stats():
+        print("GET_PLAYER_STATS ROUTE HIT")
+        try:
+            player_name =  request.args.get("name").replace(" ", "_")
+            print(f"Looking up: {player_name}")
+            player = Player(player_name,0,0,0)
+            
+            player.get_stats()
+
+            stats = {
+                "points": player.points,
+                "rebounds": player.rebounds,
+                "assists": player.assists,
+                "id":player.id,
+                "fg_pct": player.fg_pct,
+                "fg3_pct": player.fg3_pct,
+                "ft_pct": player.ft_pct,
+                "to": player.to,
+                "stl": player.stl,
+                "blk": player.blk,
+            }
+
+            return jsonify(stats)
+
+        except Exception as e:
+            return jsonify({"error": "Player not found. Please try again."}), 404
 
     return app
 
