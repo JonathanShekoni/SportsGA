@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState,useEffect } from 'react'
 import PlayerCard from './PlayerCard'
+import GraphBar from './GraphBar'
 
 
 const PlayerComparison = () => {
@@ -140,7 +141,7 @@ const PlayerComparison = () => {
             
             {result && (
                 
-
+                <div>
                 
                 <div className='flex gap-6 justify-around my-15'>
                     <div>
@@ -213,7 +214,28 @@ const PlayerComparison = () => {
                     {/*Add season averages at the bottom of the screen. Compare player1,player2 and the season average in one or multiple radar charts */} 
                    
                 </div> 
-            
+
+                <GraphBar
+                points_1={result.player1_points.toFixed(1)}
+                rebounds_1={result.player1_rebounds.toFixed(1)}
+                assists_1={result.player1_assists.toFixed(1)}
+                fg_pct_1={(result.player1_fg_pct * 100).toFixed(1)}
+                fg3_pct_1={(result.player1_fg3_pct * 100).toFixed(1)}
+                ft_pct_1={(result.player1_ft_pct * 100).toFixed(1)}
+                points_2={result.player2_points.toFixed(1)}
+                rebounds_2={result.player2_rebounds.toFixed(1)}
+                assists_2={result.player2_assists.toFixed(1)}
+                fg_pct_2={(result.player2_fg_pct * 100).toFixed(1)}
+                fg3_pct_2={(result.player2_fg3_pct * 100).toFixed(1)}
+                ft_pct_2={(result.player2_ft_pct * 100).toFixed(1)}
+                league_avg_points={result.league_avg_points}
+                league_avg_rebounds={result.league_avg_rebounds}
+                league_avg_assists={result.league_avg_assists}
+                league_avg_fg_pct={(result.league_avg_fg_pct * 100)}
+                league_avg_fg3_pct={(result.league_avg_fg3_pct * 100)}
+                league_avg_ft_pct={(result.league_avg_ft_pct * 100)}
+                />
+            </div>
         )}
     </div>
   )

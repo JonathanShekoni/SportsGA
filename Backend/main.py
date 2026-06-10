@@ -197,6 +197,15 @@ def comparePlayers(player1,player2):
         "player2_stl":player2.stl,
         "player1_blk":player1.blk,
         "player2_blk":player2.blk,
+        "league_avg_points": 9.16,
+        "league_avg_rebounds": 3.58,
+        "league_avg_assists": 2.14,
+        "league_avg_fg_pct": 0.46,
+        "league_avg_fg3_pct": 0.31,
+        "league_avg_ft_pct": 0.74,
+        "league_avg_to": 1.1,
+        "league_avg_stl": 0.7,
+        "league_avg_blk": 0.40
     }
     
 
