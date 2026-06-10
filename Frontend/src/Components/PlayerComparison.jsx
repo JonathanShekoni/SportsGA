@@ -216,24 +216,26 @@ const PlayerComparison = () => {
                 </div> 
 
                 <GraphBar
-                points_1={result.player1_points.toFixed(1)}
-                rebounds_1={result.player1_rebounds.toFixed(1)}
-                assists_1={result.player1_assists.toFixed(1)}
-                fg_pct_1={(result.player1_fg_pct * 100).toFixed(1)}
-                fg3_pct_1={(result.player1_fg3_pct * 100).toFixed(1)}
-                ft_pct_1={(result.player1_ft_pct * 100).toFixed(1)}
-                points_2={result.player2_points.toFixed(1)}
-                rebounds_2={result.player2_rebounds.toFixed(1)}
-                assists_2={result.player2_assists.toFixed(1)}
-                fg_pct_2={(result.player2_fg_pct * 100).toFixed(1)}
-                fg3_pct_2={(result.player2_fg3_pct * 100).toFixed(1)}
-                ft_pct_2={(result.player2_ft_pct * 100).toFixed(1)}
+                player1_name={result.player1_name}
+                player2_name={result.player2_name}
+                points_1={result.player1_points}
+                rebounds_1={result.player1_rebounds}
+                assists_1={result.player1_assists}
+                fg_pct_1={(result.player1_fg_pct * 100)}
+                fg3_pct_1={(result.player1_fg3_pct * 100)}
+                ft_pct_1={(result.player1_ft_pct * 100)}
+                points_2={result.player2_points}
+                rebounds_2={result.player2_rebounds}
+                assists_2={result.player2_assists}
+                fg_pct_2={(result.player2_fg_pct * 100)}
+                fg3_pct_2={(result.player2_fg3_pct * 100)}
+                ft_pct_2={(result.player2_ft_pct * 100)}
                 league_avg_points={result.league_avg_points}
                 league_avg_rebounds={result.league_avg_rebounds}
                 league_avg_assists={result.league_avg_assists}
-                league_avg_fg_pct={(result.league_avg_fg_pct * 100)}
-                league_avg_fg3_pct={(result.league_avg_fg3_pct * 100)}
-                league_avg_ft_pct={(result.league_avg_ft_pct * 100)}
+                league_avg_fg_pct={(result.league_avg_fg_pct)}
+                league_avg_fg3_pct={(result.league_avg_fg3_pct)}
+                league_avg_ft_pct={(result.league_avg_ft_pct)}
                 />
             </div>
         )}
