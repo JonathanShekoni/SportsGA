@@ -33,4 +33,4 @@ from nba_api.stats.endpoints import commonplayerinfo
 
 info = commonplayerinfo.CommonPlayerInfo(player_id=1628983)
 df = info.get_data_frames()[0]
-print(df)
+print(df.iloc[0])

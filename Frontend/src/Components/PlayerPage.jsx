@@ -19,39 +19,38 @@ const PlayerPage = () => {
   },[playerName])
 
   return (
-    <div className='flex border'>
+    <div className='flex justify-center border'>
       <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${playerStats.id}.png`} className="w-32 h-32 object-cover   border-2 border-blue-400" />
-      <div className='ml-10 mt-7'>
+      
+      
+      <div className='mx-auto mt-7'>
         
-        <p>PTS:</p>
-        <p>REB:</p>
-        <p>AST:</p>
-        <p>FG%:</p>
+        <p>PTS: {playerStats.points.toFixed(1)}</p>
+        <p>REB: {playerStats.rebounds.toFixed(1)}</p>
+        <p>AST: {playerStats.assists.toFixed(1)}</p>
+        <p>FG%: {(playerStats.fg_pct * 100).toFixed(1)}</p>
       </div>
-      <div className='ml-20 mt-7'>
-        <p>3FG%:</p>
-        <p>FT%:</p>
-        <p>BLK:</p>
-        <p>STL:</p>
+      <div className='mx-auto mt-7'>
+        <p>3FG%: {(playerStats.fg3_pct * 100).toFixed(1)}</p>
+        <p>FT%: {(playerStats.ft_pct * 100).toFixed(1)}</p>
+        <p>BLK: {playerStats.blk.toFixed(1)}</p>
+        <p>STL: {playerStats.stl.toFixed(1)}</p>
       </div>
-      <div className='ml-10'>
-          <p className="text-lg font-bold my-4">{playerName}</p>
-          <p> Age: </p>
-          <p> Draft Class: </p>
-          
+      <div className='mx-auto '>
+          <p className="text-lg font-bold my-4 justify-between">{playerName}</p>
       </div>
-      <div className='ml-20 mt-7'>
-        <p>3FG%:</p>
-        <p>FT%:</p>
-        <p>BLK:</p>
-        <p>STL:</p>
+      <div className='mx-auto mt-7'>
+        <p>Draft Year: {playerStats.draft_year}</p>
+        <p>Height: {playerStats.height}</p>
+        <p>Team: {playerStats.team}</p>
+        <p>School: {playerStats.school}</p>
       </div>
 
-            <div className='ml-20 mt-7'>
-        <p>3FG%:</p>
-        <p>FT%:</p>
-        <p>BLK:</p>
-        <p>STL:</p>
+            <div className='mx-auto mt-7'>
+        <p>DOB: {playerStats.birth_date}</p>
+        <p>WEIGHT: {playerStats.weight}</p>
+        <p>POSITION: {playerStats.position}</p>
+        <p>COUNTRY: {playerStats.country}</p>
       </div>
     </div>
   )
