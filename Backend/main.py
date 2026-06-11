@@ -116,7 +116,6 @@ def create_app():
             stats['country'] = info_data['COUNTRY']
             stats['school'] = info_data['SCHOOL']   
             stats['weight'] = info_data['WEIGHT']
-            stats['position'] = info_data['POSITION']
             stats['birth_date'] = info_data['BIRTHDATE'][:10] # Extract just the date part
 
             
