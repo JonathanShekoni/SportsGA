@@ -18,6 +18,7 @@ const PlayerPage = () => {
     fetchStats()
   },[playerName])
 
+  console.log(playerStats)
   return (
     <div className='flex justify-center border'>
       { playerStats && (
