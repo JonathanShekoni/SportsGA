@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from nba_api.stats.endpoints import commonplayerinfo
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine,inspect,text
@@ -20,11 +21,12 @@ engine = create_engine(
 
 
 
-
+player_info_cache = {}
 
 
 
 def create_app():
+    
     app = Flask(__name__, instance_relative_config=True)
 
     inspector = inspect(engine)
@@ -97,6 +99,24 @@ def create_app():
                 "blk": player.blk,
             }
 
+            
+            
+            
+            if player_name not in player_info_cache:
+                info = commonplayerinfo.CommonPlayerInfo(player_id=player.id)
+                df = info.get_data_frames()[0]
+                player_info_cache[player_name] = df.iloc[0].to_dict()
+            
+            info_data = player_info_cache[player_name]
+            
+            stats['position'] = info_data['POSITION']
+            stats['team'] = info_data['TEAM_NAME']
+            stats['draft_year'] = info_data['DRAFT_YEAR']
+            stats['height'] = info_data['HEIGHT']
+            stats['country'] = info_data['COUNTRY']
+            stats['school'] = info_data['SCHOOL']   
+
+            
             return jsonify(stats)
 
         except Exception as e:
@@ -290,7 +310,7 @@ def comparePlayers(player1,player2):
 
     if (player1.stl > player2.stl):
         score1 += 1
-        comparisons["stl"] = player1.stl
+        comparisons["stl"] = player1.name
     elif (player1.stl == player2.stl):
         score1 += 1
         score2 += 1

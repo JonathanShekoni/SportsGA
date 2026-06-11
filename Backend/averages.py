@@ -28,3 +28,9 @@ print(f"League Average FT%: {league_avg_ft_pct}")
 print(f"League Average Turnovers: {league_avg_to}")
 print(f"League Average Steals: {league_avg_stl}")
 print(f"League Average Blocks: {league_avg_blk}")
+
+from nba_api.stats.endpoints import commonplayerinfo
+
+info = commonplayerinfo.CommonPlayerInfo(player_id=1628983)
+df = info.get_data_frames()[0]
+print(df)
