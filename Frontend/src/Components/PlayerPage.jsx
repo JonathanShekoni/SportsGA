@@ -60,12 +60,6 @@ const PlayerPage = () => {
         </div>
         <div className='flex justify-center border'>
           <p className="text-lg font-bold my-4 justify-between">Career Stats</p>
-          <p>{playerStats.MVP} MVP Awards</p>
-          <p>{playerStats.Finals_MVP} Finals MVP Awards</p>
-          <p>{playerStats.All_NBA} All-NBA Selections</p>
-          <p>{playerStats.All_Star} All-Star Selections</p>
-          <p>{playerStats.Defensive_Player_of_the_Year} Defensive Player of the Year Awards</p>
-          <p>{playerStats.Rookie_of_the_Year} Rookie of the Year Awards</p>
         </div>
         
         
