@@ -150,8 +150,8 @@ def create_app():
             return jsonify(stats)
 
         except Exception as e:
+            print(f"PLAYER ROUTE ERROR: {e}")
             return jsonify({"error": "Player not found. Please try again."}), 404
-
     return app
 
 #Connect to the DB

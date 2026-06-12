@@ -28,7 +28,7 @@ const GraphBar = ({ player1_name, player2_name, points_1, rebounds_1, assists_1,
 
 
   return (
-    <div className='w-full h-120 bg-transparent rounded-lg flex items-center justify-center mt-10'>
+    <div className='w-full h-120 bg-transparent rounded-lg flex items-center justify-center mt-10 ' style={{ minHeight: '400px' }}>
       <ResponsiveContainer  width="100%" height="100%">
         <RadarChart data= {data}>
           <PolarGrid />
