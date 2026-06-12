@@ -12,6 +12,11 @@ const PlayerPage = () => {
     const fetchStats = async () => {
       const res = await fetch(`https://sportsga.onrender.com/player?name=${playerName}`)
       const data = await res.json()
+
+      if (data.error) {
+        console.log('Player not found')
+        return
+    }
       setplayerStats(data)
     }
 
