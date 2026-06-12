@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from nba_api.stats.endpoints import commonplayerinfo
+from nba_api.stats.endpoints import playerawards
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine,inspect,text
@@ -22,7 +23,7 @@ engine = create_engine(
 
 
 player_info_cache = {}
-
+player_awards_cache = {}
 
 
 def create_app():
@@ -107,6 +108,28 @@ def create_app():
                 df = info.get_data_frames()[0]
                 player_info_cache[player_name] = df.iloc[0].to_dict()
             
+
+            if player_name not in player_awards_cache:
+                awards = playerawards.PlayerAwards(player_id=player.id)
+                df = awards.get_data_frames()[0]
+                awards_list = df['DESCRIPTION'].tolist()
+                player_awards_cache[player_name] = awards_list
+
+
+            for award in player_awards_cache[player_name]:
+                if award == "NBA Most Valuable Player":
+                    stats['MVP'] += 1
+                elif award == "NBA Finals Most Valuable Player":
+                    stats['Finals_MVP'] += 1
+                elif award == "All-NBA":
+                    stats['All_NBA'] += 1
+                elif award == "NBA All-Star":
+                    stats['All_Star'] += 1
+                elif award == "NBA Defensive Player of the Year":
+                    stats['Defensive_Player_of_the_Year'] += 1
+                elif award == "NBA Rookie of the Year":
+                    stats['Rookie_of_the_Year'] += 1
+
             info_data = player_info_cache[player_name]
             
             stats['position'] = info_data['POSITION']
@@ -117,7 +140,12 @@ def create_app():
             stats['school'] = info_data['SCHOOL']   
             stats['weight'] = info_data['WEIGHT']
             stats['birth_date'] = info_data['BIRTHDATE'][:10] # Extract just the date part
-
+            stats['MVP'] = 0
+            stats['Finals_MVP'] = 0
+            stats['All_NBA'] = 0
+            stats['All_Star'] = 0
+            stats['Defensive_Player_of_the_Year'] = 0
+            stats['Rookie_of_the_Year'] = 0
             
             return jsonify(stats)
 

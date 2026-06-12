@@ -20,9 +20,11 @@ const PlayerPage = () => {
 
   console.log(playerStats)
   return (
-    <div className='flex justify-center border'>
+      <>
       { playerStats && (
-        <>
+        <div>
+        <div className='flex justify-center border'>
+        
         <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${playerStats.id}.png`} className="w-32 h-32 object-cover   border-2 border-blue-400" />
         
         
@@ -55,9 +57,23 @@ const PlayerPage = () => {
           <p>POSITION: {playerStats.position}</p>
           <p>COUNTRY: {playerStats.country}</p>
         </div>
-        </>
+        </div>
+        <div className='flex justify-center border'>
+          <p className="text-lg font-bold my-4 justify-between">Career Stats</p>
+          <p>{playerStats.MVP} MVP Awards</p>
+          <p>{playerStats.Finals_MVP} Finals MVP Awards</p>
+          <p>{playerStats.All_NBA} All-NBA Selections</p>
+          <p>{playerStats.All_Star} All-Star Selections</p>
+          <p>{playerStats.Defensive_Player_of_the_Year} Defensive Player of the Year Awards</p>
+          <p>{playerStats.Rookie_of_the_Year} Rookie of the Year Awards</p>
+        </div>
+        
+        
+        </div>
+
+        
       )}
-    </div>
+    </>
   )
 }
 
