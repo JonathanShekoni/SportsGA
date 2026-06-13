@@ -102,7 +102,7 @@ def create_app():
                 'Finals_MVP': 0,
                 'All_NBA': 0,
                 'All_Star': 0,
-                'Defensive_Player_of_the_Year': 0,
+                'DPOY': 0,
                 'Rookie_of_the_Year': 0,
                 'CPOY':0,
                 'WFMVP':0,
@@ -149,7 +149,7 @@ def create_app():
                 elif award == "NBA All-Star":
                     stats['awards']['All_Star'] += 1
                 elif award == "NBA Defensive Player of the Year":
-                    stats['awards']['Defensive_Player_of_the_Year'] += 1
+                    stats['awards']['DPOY'] += 1
                 elif award == "NBA Rookie of the Year":
                     stats['awards']['Rookie_of_the_Year'] += 1
                 elif award == "NBA Clutch Player of the Year":
