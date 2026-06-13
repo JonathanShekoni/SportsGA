@@ -97,6 +97,7 @@ const PlayerComparison = () => {
                         onChange= {(e) => {
                             setPlayer1(e.target.value)
                             handleSuggestions(e.target.value)
+                            
                         }}
                     />
                     {suggestions.length > 0 && (

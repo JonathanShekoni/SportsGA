@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { PacmanLoader } from 'react-spinners';
+import LineChart from './LineChart';
 
 const PlayerPage = () => {
 
+  const [loading, setLoading] = useState(true)
   const [searchParams] = useSearchParams()
   const playerName = searchParams.get('name')
   const [playerStats,setplayerStats] = useState(null)
+  const [careerStats,setcareerStats] = useState([])
+
 
 
   useEffect(() => {
@@ -13,17 +18,43 @@ const PlayerPage = () => {
       const res = await fetch(`https://sportsga.onrender.com/player?name=${playerName}`)
       const data = await res.json()
 
+      const res2 = await fetch(`https://sportsga.onrender.com/player/career?name=${playerName}`)
+      const data2 = await res2.json()
+      
+
       if (data.error) {
         console.log('Player not found')
+        setLoading(false)
         return
     }
+
+      if (data2.error) {
+        console.log('Career Stats not found')
+        setLoading(false)
+        return
+    }
+
       setplayerStats(data)
+      setcareerStats(data2)
+      setLoading(false)
     }
 
     fetchStats()
   },[playerName])
 
   console.log(playerStats)
+
+
+
+  if (loading) return <div className="fixed inset-0 flex items-center justify-center"><PacmanLoader 
+          color="#60A5FA" // Yellow color typical for Pacman
+          loading={loading} 
+          size={25} 
+          aria-label="Pacman Loader"
+          data-testid="loader"
+        /></div>
+
+  
   return (
       <>
       { playerStats && (
@@ -83,8 +114,16 @@ const PlayerPage = () => {
         </div>
         
         
+
+        <div className='mt-50'> 
+          {careerStats[0]?.PTS}            
+          <LineChart></LineChart>
+        
+        
         </div>
 
+
+        </div>
         
       )}
     </>
