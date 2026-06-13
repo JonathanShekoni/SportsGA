@@ -98,6 +98,12 @@ def create_app():
                 "to": player.to,
                 "stl": player.stl,
                 "blk": player.blk,
+                'MVP': 0,
+                'Finals_MVP': 0,
+                'All_NBA': 0,
+                'All_Star': 0,
+                'Defensive_Player_of_the_Year': 0,
+                'Rookie_of_the_Year': 0,
             }
 
             
@@ -106,7 +112,19 @@ def create_app():
             if player_name not in player_info_cache:
                 info = commonplayerinfo.CommonPlayerInfo(player_id=player.id)
                 df = info.get_data_frames()[0]
-                player_info_cache[player_name] = df.iloc[0].to_dict()
+                row = df.iloc[0]
+                player_info_cache[player_name] = {
+
+
+                    'POSITION': row['POSITION'],
+                    'TEAM_NAME': row['TEAM_NAME'],
+                    'DRAFT_YEAR': str(row['DRAFT_YEAR']),
+                    'HEIGHT': row['HEIGHT'],
+                    'COUNTRY': row['COUNTRY'],
+                    'SCHOOL': row['SCHOOL'],
+                    'WEIGHT': str(row['WEIGHT']),
+                    'BIRTHDATE': str(row['BIRTHDATE'])[:10]
+                }
             
 
             if player_name not in player_awards_cache:
@@ -140,12 +158,7 @@ def create_app():
             stats['school'] = info_data['SCHOOL']   
             stats['weight'] = info_data['WEIGHT']
             stats['birth_date'] = info_data['BIRTHDATE'][:10] # Extract just the date part
-            stats['MVP'] = 0
-            stats['Finals_MVP'] = 0
-            stats['All_NBA'] = 0
-            stats['All_Star'] = 0
-            stats['Defensive_Player_of_the_Year'] = 0
-            stats['Rookie_of_the_Year'] = 0
+
             
             return jsonify(stats)
 
