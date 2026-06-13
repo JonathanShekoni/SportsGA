@@ -77,13 +77,13 @@ const PlayerComparison = () => {
     }
 
 
-    if (loading) return <p className='text-center mt-10'><PacmanLoader 
-        color="#FACC15" // Yellow color typical for Pacman
+    if (loading) return <div className="fixed inset-0 flex items-center justify-center"><PacmanLoader 
+        color="#60A5FA" // Yellow color typical for Pacman
         loading={loading} 
         size={25} 
         aria-label="Pacman Loader"
         data-testid="loader"
-      /></p>
+      /></div>
 
     return (
     <div>
