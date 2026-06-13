@@ -74,8 +74,8 @@ const PlayerPage = () => {
           {playerStats.awards.All_Star > 0 && (<p>{playerStats.awards.All_Star}xALL STAR</p>)}
           {playerStats.awards.DPOY > 0 && (<p>{playerStats.awards.DPOY}xDPOY</p>)}
           {playerStats.awards.Rookie_of_the_Year > 0 && (<p>{playerStats.awards.Rookie_of_the_Year}xROY</p>)}
-          {playerStats.awards.CPOY > 0 && (<p>{playerStats.CPOY}xCPOY</p>)}
-          {playerStats.awards.WFMVP > 0 && (<p>{playerStats.WFMVP}xWFMVP</p>)}
+          {playerStats.awards.CPOY > 0 && (<p>{playerStats.awards.CPOY}xCPOY</p>)}
+          {playerStats.awards.WFMVP > 0 && (<p>{playerStats.awards.WFMVP}xWFMVP</p>)}
           {playerStats.awards.EFMVP > 0 && (<p>{playerStats.awards.EFMVP}xEFMVP</p>)}
 
 

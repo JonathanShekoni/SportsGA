@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from nba_api.stats.endpoints import commonplayerinfo
 from nba_api.stats.endpoints import playerawards
+from nba_api.stats.endpoints import playercareerstats
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine,inspect,text
@@ -24,6 +25,7 @@ engine = create_engine(
 
 player_info_cache = {}
 player_awards_cache = {}
+player_career_cache = {}
 
 
 def create_app():
@@ -60,8 +62,8 @@ def create_app():
             print(f"Looking up: {player1_name} and {player2_name}")
 
             #Create Player objects
-            player1 = Player(player1_name,0,0,0)
-            player2 = Player(player2_name,0,0,0)
+            player1 = Player(player1_name)
+            player2 = Player(player2_name)
 
             return jsonify(comparePlayers(player1,player2))
         except Exception as e:
@@ -83,7 +85,7 @@ def create_app():
         try:
             player_name =  request.args.get("name").replace(" ", "_")
             print(f"Looking up: {player_name}")
-            player = Player(player_name,0,0,0)
+            player = Player(player_name)
             
             player.get_stats()
 
@@ -176,6 +178,38 @@ def create_app():
         except Exception as e:
             print(f"PLAYER ROUTE ERROR: {e}")
             return jsonify({"error": "Player not found. Please try again."}), 404
+        
+
+
+    @app.route('/player/career')
+    def returnCareerStats():
+        print("GET_CAREER_STATS ROUTE HIT")
+        try:
+            player_name = request.args.get("name").replace(" ", "_")
+            print(f"Looking up: {player_name}")
+            player = Player(player_name)
+
+            player.get_id()
+
+            if player_name not in player_career_cache:
+                careerStats =  playercareerstats.PlayerCareerStats(
+                    player_id=player.id,
+                    per_mode36='PerGame'
+        
+                )
+
+                df = careerStats.season_totals_regular_season.get_data_frame()
+                career_list = df[['SEASON_ID', 'PTS', 'REB', 'AST', 'FG_PCT']].to_dict(orient='records')
+                player_career_cache[player_name] = career_list
+
+            return jsonify(player_career_cache[player_name])
+
+        except Exception as e:
+            print(f"CAREER ROUTE ERROR: {e}")
+            return jsonify({"error": "Career stats not found."}), 404
+
+
+
     return app
 
 #Connect to the DB
@@ -197,12 +231,17 @@ def query_db(query):
 #Player class
 class Player:
 
-    def __init__(self,name,points,rebounds,assists):
+    def __init__(self,name):
         self.name = name
-        self.points = points
-        self.rebounds = rebounds
-        self.assists = assists
+        self.points = 0
+        self.rebounds = 0
+        self.assists = 0
 
+
+    def get_id(self):
+        query = f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"'
+        df = query_db(query)
+        self.id = int(df['player_id'][0])
 
     def get_stats(self): 
         query = f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"'
