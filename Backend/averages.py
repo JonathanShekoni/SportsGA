@@ -43,15 +43,7 @@ awards = playerawards.PlayerAwards(player_id=1628983)
 for award in awards.get_data_frames()[0]['DESCRIPTION']:
     print(award)
 
-awards_dict = {'All-NBA': 0, 'All-NBA Second Team': 0, 'All-NBA Third Team': 0, 'NBA Most Valuable Player': 0, 'NBA Finals Most Valuable Player': 0, 'NBA Defensive Player of the Year': 0, 'NBA Rookie of the Year': 0}
 
-for award in awards.get_data_frames()[0]['DESCRIPTION']:
-    if award in awards_dict:
-        awards_dict[award] += 1
 
-print(awards_dict)
-
-info = playerawards.PlayerAwards(player_id=1628983)
-df = info.get_data_frames()[0]
-if 'NBA Most Valuable Player' in df['DESCRIPTION'].values:
-    print("Player has won MVP")
+df = awards.get_data_frames()[0]['DESCRIPTION']
+print(df)

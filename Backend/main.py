@@ -103,7 +103,11 @@ def create_app():
                 'All_NBA': 0,
                 'All_Star': 0,
                 'Defensive_Player_of_the_Year': 0,
-                'Rookie_of_the_Year': 0,},
+                'Rookie_of_the_Year': 0,
+                'CPOY':0,
+                'WFMVP':0,
+                'EFMVP':0,
+                },
                 
             }
 
@@ -148,6 +152,12 @@ def create_app():
                     stats['awards']['Defensive_Player_of_the_Year'] += 1
                 elif award == "NBA Rookie of the Year":
                     stats['awards']['Rookie_of_the_Year'] += 1
+                elif award == "NBA Clutch Player of the Year":
+                    stats['awards']['CPOY'] += 1
+                elif award == "Eastern Conference Finals Most Valuable Player":
+                    stats['awards']['EFMVP'] += 1
+                elif award == "Western Conference Finals Most Valuable Player":
+                    stats['awards']['WFMVP'] += 1
 
             info_data = player_info_cache[player_name]
             

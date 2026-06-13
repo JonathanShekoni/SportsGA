@@ -64,8 +64,22 @@ const PlayerPage = () => {
           <p>COUNTRY: {playerStats.country}</p>
         </div>
         </div>
-        <div className='flex justify-center border'>
+        <div className='justify-center border'>
           <p className="text-lg font-bold my-4 justify-between">Career Stats</p>
+        </div>
+        <div className='flex justify-center mx-auto gap-6'>
+          {playerStats.awards.MVP > 0 && (<p>{playerStats.awards.MVP}xMVP</p>)}
+          {playerStats.awards.Finals_MVP > 0 && (<p>{playerStats.awards.Finals_MVP}xFinals MVP</p>)}
+          {playerStats.awards.All_NBA > 0 && (<p>{playerStats.awards.All_NBA}xALL NBA</p>)}
+          {playerStats.awards.All_Star > 0 && (<p>{playerStats.awards.All_Star}xALL STAR</p>)}
+          {playerStats.awards.Defensive_player_of_the_year > 0 && (<p>{playerStats.awards.Defensive_player_of_the_year}xDPOY</p>)}
+          {playerStats.awards.Rookie_of_the_Year > 0 && (<p>{playerStats.awards.Rookie_of_the_Year}xROY</p>)}
+          {playerStats.awards.CPOY > 0 && (<p>{playerStats.CPOY}xCPOY</p>)}
+          {playerStats.awards.WFMVP > 0 && (<p>{playerStats.WFMVP}xWFMVP</p>)}
+          {playerStats.awards.EFMVP > 0 && (<p>{playerStats.awards.EFMVP}xEFMVP</p>)}
+
+
+
         </div>
         
         
