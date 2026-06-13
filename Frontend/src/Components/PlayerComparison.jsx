@@ -2,6 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import PlayerCard from './PlayerCard'
 import GraphBar from './GraphBar'
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
 
 const PlayerComparison = () => {
@@ -76,7 +77,13 @@ const PlayerComparison = () => {
     }
 
 
-    if (loading) return <p className='text-center mt-10'>Loading...</p>
+    if (loading) return <p className='text-center mt-10'><PacmanLoader 
+        color="#FACC15" // Yellow color typical for Pacman
+        loading={loading} 
+        size={25} 
+        aria-label="Pacman Loader"
+        data-testid="loader"
+      /></p>
 
     return (
     <div>
