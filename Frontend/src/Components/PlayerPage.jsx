@@ -48,6 +48,7 @@ const PlayerPage = () => {
         </div>
         <div className='mx-auto '>
             <p className="text-lg font-bold my-4 justify-between">{playerName}</p>
+            
         </div>
         <div className='mx-auto mt-7'>
           <p>Draft Year: {playerStats.draft_year}</p>

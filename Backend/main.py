@@ -98,12 +98,13 @@ def create_app():
                 "to": player.to,
                 "stl": player.stl,
                 "blk": player.blk,
-                'MVP': 0,
+                "awards": {'MVP': 0,                
                 'Finals_MVP': 0,
                 'All_NBA': 0,
                 'All_Star': 0,
                 'Defensive_Player_of_the_Year': 0,
-                'Rookie_of_the_Year': 0,
+                'Rookie_of_the_Year': 0,},
+                
             }
 
             
@@ -136,17 +137,17 @@ def create_app():
 
             for award in player_awards_cache[player_name]:
                 if award == "NBA Most Valuable Player":
-                    stats['MVP'] += 1
+                    stats['awards']['MVP'] += 1
                 elif award == "NBA Finals Most Valuable Player":
-                    stats['Finals_MVP'] += 1
+                    stats['awards']['Finals_MVP'] += 1
                 elif award == "All-NBA":
-                    stats['All_NBA'] += 1
+                    stats['awards']['All_NBA'] += 1
                 elif award == "NBA All-Star":
-                    stats['All_Star'] += 1
+                    stats['awards']['All_Star'] += 1
                 elif award == "NBA Defensive Player of the Year":
-                    stats['Defensive_Player_of_the_Year'] += 1
+                    stats['awards']['Defensive_Player_of_the_Year'] += 1
                 elif award == "NBA Rookie of the Year":
-                    stats['Rookie_of_the_Year'] += 1
+                    stats['awards']['Rookie_of_the_Year'] += 1
 
             info_data = player_info_cache[player_name]
             
