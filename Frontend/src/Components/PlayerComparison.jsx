@@ -2,7 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import PlayerCard from './PlayerCard'
 import GraphBar from './GraphBar'
-import PacmanLoader from 'react-spinners/PacmanLoader';
+import { PacmanLoader } from 'react-spinners';
 
 
 const PlayerComparison = () => {
