@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PacmanLoader } from 'react-spinners';
-import LineChart from './LineChart';
+import CareerChart from './CareerChart';
 
 const PlayerPage = () => {
 
@@ -43,6 +43,7 @@ const PlayerPage = () => {
   },[playerName])
 
   console.log(playerStats)
+  console.log(careerStats)
 
 
 
@@ -115,9 +116,10 @@ const PlayerPage = () => {
         
         
 
-        <div className='mt-50'> 
-          {careerStats[0]?.PTS}            
-          <LineChart></LineChart>
+        <div className='mt-30'>         
+          <CareerChart
+          careerData={careerStats}
+          ></CareerChart>
         
         
         </div>
