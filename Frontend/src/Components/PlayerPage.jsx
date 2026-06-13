@@ -116,7 +116,7 @@ const PlayerPage = () => {
         
         
 
-        <div className='mt-30'>         
+        <div className='mt-10'>         
           <CareerChart
           careerData={careerStats}
           ></CareerChart>
