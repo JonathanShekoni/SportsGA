@@ -5,6 +5,7 @@ import GraphBar from './GraphBar'
 
 
 const PlayerComparison = () => {
+    const [loading, setLoading] = useState(true)
     const [player1, setPlayer1] = useState('')
     const [player2, setPlayer2] = useState('')
     const [result, setResult] = useState(null)
@@ -17,9 +18,11 @@ const PlayerComparison = () => {
             const res = await fetch(`https://sportsga.onrender.com/players`)
             const data = await res.json()
             setPlayerList(data)
+            setLoading(false)
         }
 
         fetchplayers()
+        
     }, [])
 
 
@@ -71,6 +74,9 @@ const PlayerComparison = () => {
         }
         setSuggestions2(updatedList)
     }
+
+
+    if (loading) return <p className='text-center mt-10'>Loading...</p>
 
     return (
     <div>
