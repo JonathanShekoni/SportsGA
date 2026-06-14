@@ -47,13 +47,17 @@ const PlayerPage = () => {
 
 
 
-  if (loading) return <div className="fixed inset-0 flex items-center justify-center"><PacmanLoader 
+  if (loading) return 
+          <div>
+          <div className="fixed inset-0 flex items-center justify-center"><PacmanLoader 
           color="#60A5FA" // Yellow color typical for Pacman
           loading={loading} 
           size={25} 
           aria-label="Pacman Loader"
           data-testid="loader"
         />
+        
+        </div>
         <div className = "animate-pulse">Fetching data... </div>
         </div>
 
