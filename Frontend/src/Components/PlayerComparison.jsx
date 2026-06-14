@@ -83,7 +83,9 @@ const PlayerComparison = () => {
         size={25} 
         aria-label="Pacman Loader"
         data-testid="loader"
-      /></div>
+      />
+        <div className = "animate-pulse">Fetching data... </div>
+      </div>
 
     return (
     <div>
