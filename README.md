@@ -14,6 +14,7 @@ A full-stack NBA player analytics web application featuring player comparisons, 
 - Navbar search to navigate directly to any player's profile page
 - Individual player profile pages with full season stats, biographical info, and awards
 - Career progression line chart showing points, rebounds, and assists across all seasons
+- In-memory caching layer for NBA API responses to reduce latency on repeat requests
 - REST API backend returning structured JSON data
 
 ## Tech Stack
@@ -24,22 +25,37 @@ A full-stack NBA player analytics web application featuring player comparisons, 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-CC2927?style=for-the-badge&logo=python&logoColor=white)
 ![Recharts](https://img.shields.io/badge/Recharts-22B5BF?style=for-the-badge&logo=react&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ## How to Run Locally
 
-### Backend
+### Option 1 — Docker (recommended)
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+```bash
+docker compose up --build
+```
+
+This spins up the Flask backend and a PostgreSQL database together. The API will be available at `http://localhost:5000`. The containerized database starts empty — run the seeding script to populate it with player data.
+
+### Option 2 — Manual setup
+
+**Backend**
 ```bash
 cd Backend
 pip install -r requirements.txt
 python main.py
 ```
 
-### Frontend
+**Frontend**
 ```bash
-cd frontend
+cd Frontend
 npm install
 npm run dev
 ```
+
+Requires a `.env` file in the `Backend` folder with `DATABASE_URL` and `BALLDONTLIE_API_KEY`.
 
 ## API Endpoints
 
@@ -50,6 +66,15 @@ npm run dev
 | GET | `/player/career?name=X` | Returns per-game averages across all seasons for a single player |
 | GET | `/players` | Returns a list of all available players |
 
+## Testing
+
+```bash
+cd Backend
+pytest
+```
+
+7 tests covering the `/players`, `/player`, and `/compare` routes. NBA API and database calls are mocked so tests run without any external dependencies. CI runs automatically on every push to `main` via GitHub Actions.
+
 ## Deployment
 
 - **Frontend** — Vercel
@@ -58,4 +83,4 @@ npm run dev
 
 ## Project Status
 
-✅ Live — actively being improved with additional stats and UI polish.
+✅ Live — actively being improved with additional stats, UI polish, and ML-powered player
