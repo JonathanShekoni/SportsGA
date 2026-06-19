@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import PlayerComparison from "./Components/PlayerComparison"
-import PlayerCard from "./Components/PlayerCard"
 import MenuBar from "./Components/MenuBar"
 import PlayerPage from "./Components/PlayerPage"
 

@@ -1,9 +1,21 @@
 import React from 'react'
 import { useState,useEffect } from 'react'
-import PlayerCard from './PlayerCard'
+import { PlayerHeader, StatBox } from './PlayerCard'
 import GraphBar from './GraphBar'
 import { PacmanLoader } from 'react-spinners';
 
+// Drives the grid below: one row per stat, shared by both player columns and the label column.
+const STAT_ROWS = [
+    { label: 'Points/G', dataKey: 'points', winnerKey: 'points', format: (v) => v.toFixed(1) },
+    { label: 'Rebounds/G', dataKey: 'rebounds', winnerKey: 'rebounds', format: (v) => v.toFixed(1) },
+    { label: 'Assists/G', dataKey: 'assists', winnerKey: 'assists', format: (v) => v.toFixed(1) },
+    { label: 'FG%', dataKey: 'fg_pct', winnerKey: 'fg_pct', format: (v) => (v * 100).toFixed(1) },
+    { label: '3FG%', dataKey: 'fg3_pct', winnerKey: 'fg3_pct', format: (v) => (v * 100).toFixed(1) },
+    { label: 'FT%', dataKey: 'ft_pct', winnerKey: 'ft_pct', format: (v) => (v * 100).toFixed(1) },
+    { label: 'TO', dataKey: 'to', winnerKey: 'to', format: (v) => v.toFixed(1) },
+    { label: 'STL', dataKey: 'stl', winnerKey: 'stl', format: (v) => v.toFixed(1) },
+    { label: 'BLK', dataKey: 'blk', winnerKey: 'blk', format: (v) => v.toFixed(1) },
+]
 
 const PlayerComparison = () => {
     const [loading, setLoading] = useState(true)
@@ -154,80 +166,56 @@ const PlayerComparison = () => {
             
             
             {result && (
-                
+
                 <div>
-                
-                <div className='flex gap-6 justify-around my-15'>
-                    <div>
-                        <PlayerCard
-                        name={result.player1_name}
-                        playerId={result.player1_id}
-                        points={result.player1_points.toFixed(1)}
-                        rebounds={result.player1_rebounds.toFixed(1)}
-                        assists={result.player1_assists.toFixed(1)}
-                        fg_pct={(result.player1_fg_pct * 100).toFixed(1)}
-                        fg3_pct={(result.player1_fg3_pct * 100).toFixed(1)}
-                        ft_pct={(result.player1_ft_pct * 100).toFixed(1)}
-                        to={result.player1_to.toFixed(1)}
-                        stl={result.player1_stl.toFixed(1)}
-                        blk={result.player1_blk.toFixed(1)}
-                        winnerPoints ={result.points}
-                        winnerAssists = {result.assists}
-                        winnerRebounds = {result.rebounds}
-                        winnerFg_pct = {result.fg_pct}
-                        winnerFg3_pct = {result.fg3_pct}
-                        winnerft_pct = {result.ft_pct}
-                        winnerto = {result.to}
-                        winnerstl = {result.stl}
-                        winnerblk = {result.blk}
-                        winner = {result.winner}
-                        />
 
+                {/*
+                  CSS Grid instead of three independently-stacked columns: every stat row is a single
+                  grid row shared by both PlayerHeaders' stat cells AND the label cell, so the browser
+                  aligns them by construction. Row/column placement is dynamic (computed per map index),
+                  so it's done via inline style rather than Tailwind classes -- Tailwind can't generate
+                  CSS for class names that only exist as runtime string interpolations.
+                */}
+                <div
+                    className='grid grid-cols-[minmax(0,320px)_auto_minmax(0,320px)] justify-center items-center gap-x-6 gap-y-2.5 my-8'
+                >
+                    <div style={{ gridColumn: 1, gridRow: 1 }} className='flex justify-center'>
+                        <PlayerHeader name={result.player1_name} playerId={result.player1_id} winner={result.winner} />
                     </div>
-                    <div className='mt-38 font-bold'>
-                        <p className='h-9 flex items-center justify-center'>Points/G</p>
-                        <p className='h-9 flex items-center justify-center'>Rebounds/G</p>
-                        <p className='h-9 flex items-center justify-center'>Assists/G</p>
-                        <p className='h-9 flex items-center justify-center'>FG%</p>
-                        <p className='h-9 flex items-center justify-center'>3FG%</p>
-                        <p className='h-9 flex items-center justify-center'>FT%</p>
-                        <p className='h-9 flex items-center justify-center'>TO</p>
-                        <p className='h-9 flex items-center justify-center'>STL</p>
-                        <p className='h-9 flex items-center justify-center'>BLK</p>
-
-                        {/*
-                        <p className=' flex items-center justify-center text-blue-400 font-bold text-lg'>{result.winner.replace(/_/g, ' ')}</p>  
-*/}
+                    <div style={{ gridColumn: 3, gridRow: 1 }} className='flex justify-center'>
+                        <PlayerHeader name={result.player2_name} playerId={result.player2_id} winner={result.winner} />
                     </div>
-                    <div>
-                        <PlayerCard
-                        name={result.player2_name}
-                        playerId={result.player2_id}
-                        points={result.player2_points.toFixed(1)}
-                        rebounds={result.player2_rebounds.toFixed(1)}
-                        assists={result.player2_assists.toFixed(1)}
-                        fg_pct={(result.player2_fg_pct * 100).toFixed(1)}
-                        fg3_pct={(result.player2_fg3_pct * 100).toFixed(1)}
-                        ft_pct={(result.player2_ft_pct * 100).toFixed(1)}
-                        to={result.player2_to.toFixed(1)}
-                        stl={result.player2_stl.toFixed(1)}
-                        blk={result.player2_blk.toFixed(1)}
-                        winnerPoints ={result.points}
-                        winnerAssists = {result.assists}
-                        winnerRebounds = {result.rebounds}
-                        winnerFg_pct = {result.fg_pct}
-                        winnerFg3_pct = {result.fg3_pct}
-                        winnerft_pct = {result.ft_pct}
-                        winnerto = {result.to}
-                        winnerstl = {result.stl}
-                        winnerblk = {result.blk}
-                        winner = {result.winner}
-                        />
 
-                    </div>    
-                    {/*Add season averages at the bottom of the screen. Compare player1,player2 and the season average in one or multiple radar charts */} 
-                   
-                </div> 
+                    {STAT_ROWS.map((row, i) => (
+                        <React.Fragment key={row.dataKey}>
+                            <div style={{ gridColumn: 1, gridRow: i + 2 }} className='flex justify-center'>
+                                <StatBox
+                                    value={row.format(result[`player1_${row.dataKey}`])}
+                                    name={result.player1_name}
+                                    winnerName={result[row.winnerKey]}
+                                />
+                            </div>
+                            <div style={{ gridColumn: 2, gridRow: i + 2 }} className='flex justify-center'>
+                                <p className='text-gray-400 text-xs sm:text-sm font-semibold uppercase tracking-widest'>{row.label}</p>
+                            </div>
+                            <div style={{ gridColumn: 3, gridRow: i + 2 }} className='flex justify-center'>
+                                <StatBox
+                                    value={row.format(result[`player2_${row.dataKey}`])}
+                                    name={result.player2_name}
+                                    winnerName={result[row.winnerKey]}
+                                />
+                            </div>
+                        </React.Fragment>
+                    ))}
+                    {/*Add season averages at the bottom of the screen. Compare player1,player2 and the season average in one or multiple radar charts */}
+                </div>
+
+                <div className='text-center my-8'>
+                    <p className='font-bebas text-xl text-gray-400 tracking-widest uppercase'>Winner</p>
+                    <p className={`font-bebas text-5xl sm:text-6xl tracking-wide mt-1 ${result.winner === 'Tie' ? 'text-yellow-400' : 'text-green-400'}`}>
+                        {result.winner === 'Tie' ? "It's a Tie" : `${result.winner.replace(/_/g, ' ')} Wins`}
+                    </p>
+                </div>
 
                 <GraphBar
                 player1_name={result.player1_name}
