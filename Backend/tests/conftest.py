@@ -27,9 +27,11 @@ def client(app):
 
 
 @pytest.fixture(autouse=True)
-def clear_caches():
+def clear_caches(monkeypatch):
     """main.py caches results in module-level dicts; keep tests isolated."""
     main.player_info_cache.clear()
     main.player_awards_cache.clear()
     main.player_career_cache.clear()
+    monkeypatch.setattr(main, 'saved_component', lambda *args: None)
+    monkeypatch.setattr(main, 'saved_career', lambda *args: None)
     yield

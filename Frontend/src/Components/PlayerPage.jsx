@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PacmanLoader } from 'react-spinners';
 import CareerChart from './CareerChart';
+import { startProfileRequests } from '../profileRequests';
 
 const StatTile = ({ label, value }) => (
   <div className="bg-gray-800/60 border border-gray-700 rounded-xl py-4 px-3 text-center">
@@ -13,7 +14,7 @@ const StatTile = ({ label, value }) => (
 const BioField = ({ label, value }) => (
   <div>
     <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase">{label}</p>
-    <p className="text-white font-medium mt-1">{value}</p>
+    <p className="text-white font-medium mt-1">{value ?? 'Temporarily unavailable'}</p>
   </div>
 )
 
@@ -31,58 +32,41 @@ const AWARD_BADGES = [
 
 const PlayerPage = () => {
 
-  const [loading, setLoading] = useState(true)
   const [searchParams] = useSearchParams()
   const playerName = searchParams.get('name')
-  const [playerStats,setplayerStats] = useState(null)
-  const [careerStats,setcareerStats] = useState([])
-
-
+  const [profile, setProfile] = useState({ name: null, loading: true })
+  const [retry, setRetry] = useState(0)
 
   useEffect(() => {
-    const fetchStats = async () => {
-      const res = await fetch(`https://sportsga.onrender.com/player?name=${playerName}`)
-      const data = await res.json()
+    const update = (values) => setProfile(previous => ({
+      ...(previous.name === playerName ? previous : { name: playerName, careerStats: [], careerLoading: true }),
+      ...values,
+    }))
+    if (!playerName?.trim()) return
+    return startProfileRequests(playerName, {
+      profile: data => update({ playerStats: data, loading: false, error: null }),
+      career: data => update({ careerStats: data, careerLoading: false }),
+      error: () => update({ loading: false, error: 'Unable to load this player. Check the name and try again.' }),
+      careerError: () => update({ careerStats: [], careerLoading: false }),
+    })
+  }, [playerName, retry])
 
-      const res2 = await fetch(`https://sportsga.onrender.com/player/career?name=${playerName}`)
-      const data2 = await res2.json()
-      
+  if (!playerName?.trim()) return <p role="alert">Enter a player name to view their profile.</p>
+  // A changed URL hides old data immediately, before the next effect runs.
+  if (profile.name !== playerName || profile.loading !== false) return (
+    <div className="fixed inset-0 flex items-center justify-center">
+      <PacmanLoader color="#60A5FA" loading size={25} aria-label="Loading player profile" />
+    </div>
+  )
+  if (profile.error) return <div className="text-center py-10">
+    <p role="alert" className="text-red-400">{profile.error}</p>
+    <button className="mt-4 text-blue-400" onClick={() => {
+      setProfile({ name: null, loading: true })
+      setRetry(value => value + 1)
+    }}>Try again</button>
+  </div>
+  const { playerStats, careerStats = [], careerLoading = true } = profile
 
-      if (data.error) {
-        console.log('Player not found')
-        setLoading(false)
-        return
-    }
-
-      if (data2.error) {
-        console.log('Career Stats not found')
-        setLoading(false)
-        return
-    }
-
-      setplayerStats(data)
-      setcareerStats(data2)
-      setLoading(false)
-    }
-
-    fetchStats()
-  },[playerName])
-
-  console.log(playerStats)
-  console.log(careerStats)
-
-
-
-  if (loading) return <div className="fixed inset-0 flex items-center justify-center"><PacmanLoader 
-          color="#60A5FA" 
-          loading={loading} 
-          size={25} 
-          aria-label="Pacman Loader"
-          data-testid="loader"
-        />
-        </div>
-
-  
   const totalAwards = playerStats
     ? Object.values(playerStats.awards).reduce((sum, count) => sum + count, 0)
     : 0
@@ -163,7 +147,7 @@ const PlayerPage = () => {
           {/* Career stats */}
           <div className="bg-gray-900/60 border border-gray-700 rounded-2xl p-6 shadow-lg">
             <h2 className="font-bebas text-2xl text-blue-400 tracking-wide mb-4">Career Stats</h2>
-            {careerStats.length > 0 ? <CareerChart careerData={careerStats} /> : (
+            {careerLoading ? <p className="text-gray-400 text-sm">Loading career stats…</p> : careerStats.length > 0 ? <CareerChart careerData={careerStats} /> : (
               <p className="text-gray-400 text-sm">Career stats are currently unavailable.</p>
             )}
           </div>

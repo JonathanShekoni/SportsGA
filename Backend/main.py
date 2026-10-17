@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
-from nba_api.stats.endpoints import commonplayerinfo
-from nba_api.stats.endpoints import playerawards
-from nba_api.stats.endpoints import playercareerstats
+from profile_store import saved_component, saved_career
+from player_identity import nba_player_id
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine,inspect,text
@@ -22,8 +21,6 @@ engine = create_engine(
 
 
 
-
-NBA_REQUEST_TIMEOUT = 5
 
 player_info_cache = {}
 player_awards_cache = {}
@@ -118,38 +115,15 @@ def create_app():
             
             
             
-            try:
-                if player_name not in player_info_cache:
-                    info = commonplayerinfo.CommonPlayerInfo(player_id=player.id, timeout=NBA_REQUEST_TIMEOUT)
-                    df = info.get_data_frames()[0]
-                    row = df.iloc[0]
-                    player_info_cache[player_name] = {
-
-
-                        'POSITION': row['POSITION'],
-                        'TEAM_NAME': row['TEAM_NAME'],
-                        'DRAFT_YEAR': str(row['DRAFT_YEAR']),
-                        'HEIGHT': row['HEIGHT'],
-                        'COUNTRY': row['COUNTRY'],
-                        'SCHOOL': row['SCHOOL'],
-                        'WEIGHT': str(row['WEIGHT']),
-                        'BIRTHDATE': str(row['BIRTHDATE'])[:10]
-                    }
-            
-
-            except Exception as exc:
-                app.logger.warning("NBA biography unavailable for %s: %s", player_name, exc)
-
-            try:
-                if player_name not in player_awards_cache:
-                    awards = playerawards.PlayerAwards(player_id=player.id, timeout=NBA_REQUEST_TIMEOUT)
-                    df = awards.get_data_frames()[0]
-                    awards_list = df['DESCRIPTION'].tolist()
-                    player_awards_cache[player_name] = awards_list
-
-
-            except Exception as exc:
-                app.logger.warning("NBA awards unavailable for %s: %s", player_name, exc)
+            # Read durable snapshots; cloud requests to stats.nba.com can hang.
+            profile_id = nba_player_id(player_name)
+            for component, cache in (('biography', player_info_cache), ('awards', player_awards_cache)):
+                try:
+                    value = saved_component(engine, profile_id, component) if profile_id is not None else None
+                    if value is not None:
+                        cache[player_name] = value
+                except Exception as exc:
+                    app.logger.warning("Saved %s unavailable for %s: %s", component, player_name, type(exc).__name__)
 
             for award in player_awards_cache.get(player_name, []):
                 if award == "NBA Most Valuable Player":
@@ -213,24 +187,14 @@ def create_app():
             player.get_id()
 
             try:
-                if player_name not in player_career_cache:
-                    careerStats =  playercareerstats.PlayerCareerStats(
-                        player_id=player.id,
-                        per_mode36='PerGame',
-                        timeout=NBA_REQUEST_TIMEOUT
-        
-                    )
-
-                    df = careerStats.season_totals_regular_season.get_data_frame()
-                    career_list = df[['SEASON_ID', 'PTS', 'REB', 'AST', 'FG_PCT']].to_dict(orient='records')
-                    player_career_cache[player_name] = career_list
-
+                profile_id = nba_player_id(player_name)
+                career = saved_career(engine, profile_id) if profile_id is not None else None
+                if career is not None:
+                    player_career_cache[player_name] = career
             except Exception as exc:
-                app.logger.warning("NBA career unavailable for %s: %s", player_name, exc)
-                # Keep the existing list response; do not cache transient failures.
-                return jsonify([])
+                app.logger.warning("Saved career unavailable for %s: %s", player_name, type(exc).__name__)
 
-            return jsonify(player_career_cache[player_name])
+            return jsonify(player_career_cache.get(player_name, []))
 
         except Exception as e:
             print(f"CAREER ROUTE ERROR: {e}")
@@ -269,7 +233,7 @@ class Player:
     def get_id(self):
         query = f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"'
         df = query_db(query)
-        self.id = int(df['player_id'][0])
+        self.id = nba_player_id(self.name) or int(df['player_id'][0])
 
     def get_stats(self): 
         query = f'SELECT * FROM "NBA_2025-2026_Season"."{self.name}"'
@@ -280,7 +244,7 @@ class Player:
         self.points = float(df['pts'][0])
         self.rebounds = float(df['reb'][0])
         self.assists = float(df['ast'][0])
-        self.id = int(df['player_id'][0])
+        self.id = nba_player_id(self.name) or int(df['player_id'][0])
         self.fg_pct = float(df['fg_pct'][0])
         self.fg3_pct = float(df['fg3_pct'][0])
         self.ft_pct = float(df['ft_pct'][0])

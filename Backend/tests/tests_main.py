@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 import pandas as pd
 
 import main
@@ -60,14 +58,9 @@ def test_get_player_stats_success(client, monkeypatch):
         "WEIGHT": "250",
         "BIRTHDATE": "1984-12-30T00:00:00",
     }])
-    mock_info = MagicMock()
-    mock_info.get_data_frames.return_value = [info_df]
-    monkeypatch.setattr(main.commonplayerinfo, "CommonPlayerInfo", lambda player_id, timeout: mock_info)
-
     awards_df = pd.DataFrame({"DESCRIPTION": ["NBA Most Valuable Player", "NBA All-Star"]})
-    mock_awards = MagicMock()
-    mock_awards.get_data_frames.return_value = [awards_df]
-    monkeypatch.setattr(main.playerawards, "PlayerAwards", lambda player_id, timeout: mock_awards)
+    monkeypatch.setattr(main, 'saved_component', lambda engine, player_id, component:
+        info_df.iloc[0].to_dict() if component == 'biography' else awards_df['DESCRIPTION'].tolist())
 
     response = client.get("/player", query_string={"name": "LeBron James"})
 
@@ -80,48 +73,29 @@ def test_get_player_stats_success(client, monkeypatch):
     assert data["position"] == "Forward"
 
 
-def test_profile_keeps_database_stats_when_nba_times_out(client, monkeypatch):
-    from requests.exceptions import ReadTimeout
-
-    monkeypatch.setattr(main, "Player", FakePlayer)
-    def unavailable(*args, **kwargs):
-        assert kwargs['timeout'] == 5
-        raise ReadTimeout('NBA unavailable')
-    monkeypatch.setattr(main.commonplayerinfo, 'CommonPlayerInfo', unavailable)
-    monkeypatch.setattr(main.playerawards, 'PlayerAwards', unavailable)
-
+def test_profile_keeps_database_stats_without_saved_details(client, monkeypatch):
+    monkeypatch.setattr(main, 'Player', FakePlayer)
     response = client.get('/player', query_string={'name': 'LeBron James'})
     assert response.status_code == 200
     data = response.get_json()
     assert data['points'] == 25.5
-    assert data['id'] == 2544
     assert data['availability'] == {'biography': False, 'awards': False}
-    assert data['team'] is None
-    assert data['birth_date'] is None
     assert data['awards']['MVP'] is None
-    assert not main.player_info_cache
-    assert not main.player_awards_cache
 
 
-def test_career_timeout_can_recover_on_next_request(client, monkeypatch):
-    from requests.exceptions import ReadTimeout
-
+def test_saved_career_is_returned_without_nba_request(client, monkeypatch):
     monkeypatch.setattr(main, 'Player', FakePlayer)
-    endpoint = MagicMock(side_effect=ReadTimeout('NBA unavailable'))
-    monkeypatch.setattr(main.playercareerstats, 'PlayerCareerStats', endpoint)
-    response = client.get('/player/career', query_string={'name': 'LeBron James'})
-    assert response.status_code == 200
-    assert response.get_json() == []
-    assert not main.player_career_cache
-    assert endpoint.call_args.kwargs['timeout'] == 5
+    expected = [dict(SEASON_ID='2025-26', PTS=20.9, REB=6.1, AST=7.2, FG_PCT=0.515)]
+    monkeypatch.setattr(main, 'saved_career', lambda engine, player_id: expected)
+    assert client.get('/player/career?name=LeBron%20James').get_json() == expected
 
-    endpoint.side_effect = None
-    endpoint.return_value.season_totals_regular_season.get_data_frame.return_value = pd.DataFrame([
-        dict(SEASON_ID='2025-26', PTS=20.9, REB=6.1, AST=7.2, FG_PCT=0.515)
-    ])
-    response = client.get('/player/career', query_string={'name': 'LeBron James'})
-    assert response.status_code == 200
-    assert response.get_json()[0]['PTS'] == 20.9
+
+def test_missing_career_can_recover_after_refresh(client, monkeypatch):
+    monkeypatch.setattr(main, 'Player', FakePlayer)
+    assert client.get('/player/career?name=LeBron%20James').get_json() == []
+    expected = [dict(SEASON_ID='2025-26', PTS=20.9, REB=6.1, AST=7.2, FG_PCT=0.515)]
+    monkeypatch.setattr(main, 'saved_career', lambda engine, player_id: expected)
+    assert client.get('/player/career?name=LeBron%20James').get_json() == expected
 
 
 def test_get_player_stats_not_found(client, monkeypatch):
