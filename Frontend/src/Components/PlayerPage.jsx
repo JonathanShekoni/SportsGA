@@ -6,7 +6,7 @@ import CareerChart from './CareerChart';
 const StatTile = ({ label, value }) => (
   <div className="bg-gray-800/60 border border-gray-700 rounded-xl py-4 px-3 text-center">
     <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase">{label}</p>
-    <p className="text-white text-2xl font-bold mt-1">{value}</p>
+    <p className="text-white text-2xl font-bold mt-1">{value ?? 'Temporarily unavailable'}</p>
   </div>
 )
 
@@ -102,7 +102,9 @@ const PlayerPage = () => {
               {playerName}
             </h1>
             <p className="text-blue-400 text-lg font-medium mt-1">
-              {playerStats.position} &bull; {playerStats.team}
+              {playerStats.availability?.biography === false
+                ? 'Player details temporarily unavailable'
+                : <>{playerStats.position} &bull; {playerStats.team}</>}
             </p>
           </div>
 
@@ -153,14 +155,17 @@ const PlayerPage = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-400 text-sm">No major awards yet.</p>
+              <p className="text-gray-400 text-sm">{playerStats.availability?.awards === false
+                ? 'Awards temporarily unavailable.' : 'No major awards yet.'}</p>
             )}
           </div>
 
           {/* Career stats */}
           <div className="bg-gray-900/60 border border-gray-700 rounded-2xl p-6 shadow-lg">
             <h2 className="font-bebas text-2xl text-blue-400 tracking-wide mb-4">Career Stats</h2>
-            <CareerChart careerData={careerStats} />
+            {careerStats.length > 0 ? <CareerChart careerData={careerStats} /> : (
+              <p className="text-gray-400 text-sm">Career stats are currently unavailable.</p>
+            )}
           </div>
 
         </div>

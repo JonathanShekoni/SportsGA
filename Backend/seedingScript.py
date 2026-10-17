@@ -4,8 +4,10 @@ import pandas as pd
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
+from nba_api.stats.endpoints import playercareerstats
 
 
+"""
 load_dotenv()
 API_KEY = os.getenv('BALLDONTLIE_API_KEY')
 
@@ -100,3 +102,16 @@ for player in players:
         print(f"Failed on {player['first_name']} {player['last_name']}: {e}")
         time.sleep(2)
         continue
+"""
+
+
+
+
+career = playercareerstats.PlayerCareerStats(
+    player_id=201939,
+    per_mode36='PerGame'
+    
+    )
+
+df = career.season_totals_regular_season.get_data_frame()
+print(df[['PLAYER_ID','SEASON_ID','PLAYER_AGE','GP','MIN','PTS', 'REB', 'AST', 'FG_PCT',"FG3_PCT","FT_PCT"]])

@@ -23,6 +23,8 @@ engine = create_engine(
 
 
 
+NBA_REQUEST_TIMEOUT = 5
+
 player_info_cache = {}
 player_awards_cache = {}
 player_career_cache = {}
@@ -116,32 +118,40 @@ def create_app():
             
             
             
-            if player_name not in player_info_cache:
-                info = commonplayerinfo.CommonPlayerInfo(player_id=player.id)
-                df = info.get_data_frames()[0]
-                row = df.iloc[0]
-                player_info_cache[player_name] = {
+            try:
+                if player_name not in player_info_cache:
+                    info = commonplayerinfo.CommonPlayerInfo(player_id=player.id, timeout=NBA_REQUEST_TIMEOUT)
+                    df = info.get_data_frames()[0]
+                    row = df.iloc[0]
+                    player_info_cache[player_name] = {
 
 
-                    'POSITION': row['POSITION'],
-                    'TEAM_NAME': row['TEAM_NAME'],
-                    'DRAFT_YEAR': str(row['DRAFT_YEAR']),
-                    'HEIGHT': row['HEIGHT'],
-                    'COUNTRY': row['COUNTRY'],
-                    'SCHOOL': row['SCHOOL'],
-                    'WEIGHT': str(row['WEIGHT']),
-                    'BIRTHDATE': str(row['BIRTHDATE'])[:10]
-                }
+                        'POSITION': row['POSITION'],
+                        'TEAM_NAME': row['TEAM_NAME'],
+                        'DRAFT_YEAR': str(row['DRAFT_YEAR']),
+                        'HEIGHT': row['HEIGHT'],
+                        'COUNTRY': row['COUNTRY'],
+                        'SCHOOL': row['SCHOOL'],
+                        'WEIGHT': str(row['WEIGHT']),
+                        'BIRTHDATE': str(row['BIRTHDATE'])[:10]
+                    }
             
 
-            if player_name not in player_awards_cache:
-                awards = playerawards.PlayerAwards(player_id=player.id)
-                df = awards.get_data_frames()[0]
-                awards_list = df['DESCRIPTION'].tolist()
-                player_awards_cache[player_name] = awards_list
+            except Exception as exc:
+                app.logger.warning("NBA biography unavailable for %s: %s", player_name, exc)
+
+            try:
+                if player_name not in player_awards_cache:
+                    awards = playerawards.PlayerAwards(player_id=player.id, timeout=NBA_REQUEST_TIMEOUT)
+                    df = awards.get_data_frames()[0]
+                    awards_list = df['DESCRIPTION'].tolist()
+                    player_awards_cache[player_name] = awards_list
 
 
-            for award in player_awards_cache[player_name]:
+            except Exception as exc:
+                app.logger.warning("NBA awards unavailable for %s: %s", player_name, exc)
+
+            for award in player_awards_cache.get(player_name, []):
                 if award == "NBA Most Valuable Player":
                     stats['awards']['MVP'] += 1
                 elif award == "NBA Finals Most Valuable Player":
@@ -161,7 +171,18 @@ def create_app():
                 elif award == "Western Conference Finals Most Valuable Player":
                     stats['awards']['WFMVP'] += 1
 
-            info_data = player_info_cache[player_name]
+            stats['availability'] = {
+                'biography': player_name in player_info_cache,
+                'awards': player_name in player_awards_cache,
+            }
+            if not stats['availability']['awards']:
+                stats['awards'] = dict.fromkeys(stats['awards'], None)
+            info_data = player_info_cache.get(player_name, {
+                key: None for key in (
+                    'POSITION', 'TEAM_NAME', 'DRAFT_YEAR', 'HEIGHT',
+                    'COUNTRY', 'SCHOOL', 'WEIGHT', 'BIRTHDATE'
+                )
+            })
             
             stats['position'] = info_data['POSITION']
             stats['team'] = info_data['TEAM_NAME']
@@ -170,7 +191,7 @@ def create_app():
             stats['country'] = info_data['COUNTRY']
             stats['school'] = info_data['SCHOOL']   
             stats['weight'] = info_data['WEIGHT']
-            stats['birth_date'] = info_data['BIRTHDATE'][:10] # Extract just the date part
+            stats['birth_date'] = info_data['BIRTHDATE'] # Extract just the date part
 
             
             return jsonify(stats)
@@ -191,16 +212,23 @@ def create_app():
 
             player.get_id()
 
-            if player_name not in player_career_cache:
-                careerStats =  playercareerstats.PlayerCareerStats(
-                    player_id=player.id,
-                    per_mode36='PerGame'
+            try:
+                if player_name not in player_career_cache:
+                    careerStats =  playercareerstats.PlayerCareerStats(
+                        player_id=player.id,
+                        per_mode36='PerGame',
+                        timeout=NBA_REQUEST_TIMEOUT
         
-                )
+                    )
 
-                df = careerStats.season_totals_regular_season.get_data_frame()
-                career_list = df[['SEASON_ID', 'PTS', 'REB', 'AST', 'FG_PCT']].to_dict(orient='records')
-                player_career_cache[player_name] = career_list
+                    df = careerStats.season_totals_regular_season.get_data_frame()
+                    career_list = df[['SEASON_ID', 'PTS', 'REB', 'AST', 'FG_PCT']].to_dict(orient='records')
+                    player_career_cache[player_name] = career_list
+
+            except Exception as exc:
+                app.logger.warning("NBA career unavailable for %s: %s", player_name, exc)
+                # Keep the existing list response; do not cache transient failures.
+                return jsonify([])
 
             return jsonify(player_career_cache[player_name])
 
